@@ -12,7 +12,7 @@ export default function NavMobile() {
     <div className="flex md:hidden">
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant={"outline"} size={"sm"}>
+          <Button variant={"outline"} size={"icon"}>
             <Menu />
           </Button>
         </SheetTrigger>
