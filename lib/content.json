@@ -1,0 +1,11 @@
+{
+    "main_menu": [
+        {"label": "Home", "url": "/"},
+        {"label": "About", "url": "/about"},
+        {"label": "Posts", "url": "/posts"}
+    ],
+    "user_menu": [
+        {"label": "Dashboard", "url": "/dashboard"},
+        {"label": "Profile", "url": "/profile"}
+    ]
+}
