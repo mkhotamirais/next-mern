@@ -5,6 +5,7 @@ import Header from "@/layouts/Header";
 import Footer from "@/layouts/Footer";
 import { ThemeProvider } from "@/layouts/ThemeProvider";
 import UserProvider from "@/layouts/UserProvider";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -29,6 +30,7 @@ export default function RootLayout({
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
+            <Toaster richColors position="top-right" />
           </UserProvider>
         </ThemeProvider>
       </body>

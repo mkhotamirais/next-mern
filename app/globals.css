@@ -132,9 +132,21 @@ button {
 }
 
 .h1 {
-  @apply text-2xl sm:text-3xl lg:text-4xl font-bold;
+  @apply text-2xl sm:text-3xl lg:text-4xl font-bold capitalize;
 }
 
 .h2 {
-  @apply text-lg sm:text-2xl lg:text-3xl font-semibold;
+  @apply text-lg sm:text-2xl font-semibold capitalize;
+}
+
+.h3 {
+  @apply text-base sm:text-lg font-medium first-letter:uppercase;
+}
+
+.btn-edit {
+  @apply px-2 text-sm text-green-500;
+}
+
+.btn-del {
+  @apply px-2 text-sm text-red-500;
 }

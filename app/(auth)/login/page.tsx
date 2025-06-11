@@ -8,6 +8,7 @@ import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { axiosInstance } from "@/lib/utils";
 import { useDataStore } from "@/lib/store";
+import ProtectedRouteAuth from "@/layouts/ProtectedRouteAuth";
 
 export default function Login() {
   const { setUser } = useDataStore();
@@ -42,42 +43,44 @@ export default function Login() {
   };
 
   return (
-    <section className="min-h-y bg-secondary py-12">
-      <div className="container">
-        <div className="bg-card p-6 rounded-md max-w-md mx-auto">
-          <div className="mb-4 space-y-1">
-            <h1 className="h1">Login</h1>
-            <p className="text-muted-foreground">
-              Do not have an account?{" "}
-              <Link href="/register" className="text-primary hover:underline">
-                Register
-              </Link>
-            </p>
+    <ProtectedRouteAuth>
+      <section className="min-h-y bg-secondary py-12">
+        <div className="container">
+          <div className="bg-card p-6 rounded-md max-w-md mx-auto">
+            <div className="mb-4 space-y-1">
+              <h1 className="h1">Login</h1>
+              <p className="text-muted-foreground">
+                Do not have an account?{" "}
+                <Link href="/register" className="text-primary hover:underline">
+                  Register
+                </Link>
+              </p>
+            </div>
+            <form onSubmit={onSubmit}>
+              <FormInput
+                id="email"
+                label="Email"
+                placeholder="example@email.com"
+                value={form.email}
+                handleChange={handleChange}
+                error={errors?.email}
+              />
+              <FormInput
+                type="password"
+                id="password"
+                label="Password"
+                placeholder="********"
+                value={form.password}
+                handleChange={handleChange}
+                error={errors?.password}
+              />
+              <Button type="submit" disabled={pending}>
+                {pending ? "Loading..." : "Login"}
+              </Button>
+            </form>
           </div>
-          <form onSubmit={onSubmit}>
-            <FormInput
-              id="email"
-              label="Email"
-              placeholder="example@email.com"
-              value={form.email}
-              handleChange={handleChange}
-              error={errors?.email}
-            />
-            <FormInput
-              type="password"
-              id="password"
-              label="Password"
-              placeholder="********"
-              value={form.password}
-              handleChange={handleChange}
-              error={errors?.password}
-            />
-            <Button type="submit" disabled={pending}>
-              {pending ? "Loading..." : "Login"}
-            </Button>
-          </form>
         </div>
-      </div>
-    </section>
+      </section>
+    </ProtectedRouteAuth>
   );
 }

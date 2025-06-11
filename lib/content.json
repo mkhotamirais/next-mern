@@ -1,11 +1,14 @@
 {
     "main_menu": [
         {"label": "Home", "url": "/"},
-        {"label": "About", "url": "/about"},
+        {"label": "Products", "url": "/products"},
         {"label": "Posts", "url": "/posts"}
     ],
     "user_menu": [
         {"label": "Dashboard", "url": "/dashboard"},
+        {"label": "Product Category", "url": "/product-category"},
+        {"label": "Product Tag", "url": "/product-tag"},
+        {"label": "Post Category", "url": "/post-category"},
         {"label": "Profile", "url": "/profile"}
     ]
 }

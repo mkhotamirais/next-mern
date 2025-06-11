@@ -3,6 +3,7 @@ import NavDesktop from "./NavDesktop";
 import NavMobile from "./NavMobile";
 import NavUser from "./NavUser";
 import { ThemeToggle } from "./ThemeToggle";
+import Search from "@/components/Search";
 
 export default function Header() {
   return (
@@ -14,6 +15,7 @@ export default function Header() {
         </div>
         <div className="flex items-center gap-3">
           <NavDesktop />
+          <Search />
           <NavUser />
           <ThemeToggle />
         </div>

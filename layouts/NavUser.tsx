@@ -24,7 +24,7 @@ export default function NavUser() {
 
   const logout = async () => {
     try {
-      await axiosInstance.post("/signout");
+      await axiosInstance.patch("/signout");
       setUser(null);
       router.replace("/");
     } catch (error) {
@@ -50,6 +50,15 @@ export default function NavUser() {
               <SheetDescription className="hidden"></SheetDescription>
             </SheetHeader>
             <nav className="flex flex-col px-3 gap-1">
+              {user.role === "admin" && (
+                <SheetClose asChild>
+                  <Link href="/users">
+                    <Button variant="outline" className="w-full justify-start">
+                      Users
+                    </Button>
+                  </Link>
+                </SheetClose>
+              )}
               {c.user_menu.map((item, i) => (
                 <SheetClose key={i} asChild>
                   <Link href={item.url}>
@@ -60,7 +69,7 @@ export default function NavUser() {
                 </SheetClose>
               ))}
               <SheetClose asChild>
-                <Button variant="outline" onClick={logout} className="w-full justify-start">
+                <Button type="button" variant="outline" onClick={logout} className="w-full justify-start">
                   Logout
                 </Button>
               </SheetClose>

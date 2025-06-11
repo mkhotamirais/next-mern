@@ -5,9 +5,9 @@ import { Input } from "./ui/input";
 interface FormInputProps {
   type?: string;
   id: string;
-  label: string;
-  placeholder: string;
-  value?: string;
+  label?: string;
+  placeholder?: string;
+  value?: string | number;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string | string[];
 }
