@@ -12,7 +12,7 @@ interface FormSelectProps {
 
 export default function FormSelect({ label, options, value, onChange, error }: FormSelectProps) {
   return (
-    <div className="mb-3">
+    <div className="mb-3 space-y-1">
       <Label className="flex flex-col gap-1 items-start">
         {label}
         <Select value={value} onValueChange={onChange}>

@@ -140,7 +140,7 @@ button {
 }
 
 .h3 {
-  @apply text-base sm:text-lg font-medium first-letter:uppercase;
+  @apply text-base sm:text-lg leading-6 font-medium first-letter:uppercase;
 }
 
 .btn-edit {
@@ -149,4 +149,8 @@ button {
 
 .btn-del {
   @apply px-2 text-sm text-red-500;
+}
+
+.badge {
+  @apply text-[0.65rem] py-0.5 px-1.5 rounded-sm bg-primary text-primary-foreground w-fit;
 }

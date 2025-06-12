@@ -12,29 +12,42 @@ import FormMultiSelect from "@/components/FormMultiSelect";
 import FormTextarea from "@/components/FormTextarea";
 import Pending from "@/components/Pending";
 import ProtectedRouteRoles from "@/layouts/ProtectedRouteRoles";
+import { toast } from "sonner";
+import FormUpload from "@/components/FormUpload";
+import Image from "next/image";
 
 export default function EditProduct() {
-  const [pendingData, setPendingData] = useState(false);
-  const params = useParams();
-  const { id } = params;
-
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [errors, setErrors] = useState<{
-    name?: string | string[];
-    price?: string | string[];
-    tags?: string | string[];
-    category?: string | string[];
-    description?: string | string[];
-  } | null>(null);
+  const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
+
+  const [pendingData, setPendingData] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string | string[]> | null>(null);
   const [pending, setPending] = useState(false);
+
   const router = useRouter();
+  const params = useParams();
+  const { id } = params;
 
   const [categories, setCategories] = useState<IProductcat[] | null>(null);
   const [tags, setTags] = useState<IProducttag[] | null>(null);
+
+  const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setImage(e.target.files[0]);
+      setPreview(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
+  const onResetFile = () => {
+    setImage(null);
+    setPreview(null);
+  };
 
   const getTags = async () => {
     try {
@@ -67,6 +80,7 @@ export default function EditProduct() {
       setDescription(res.data.description);
       setCategory(res.data.category._id);
       setSelectedTags(res.data.tags.map((tag: IProducttag) => tag._id));
+      setCurrentImage(res.data.imageUrl);
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error);
@@ -87,11 +101,19 @@ export default function EditProduct() {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = { name, price, description, category, tags: selectedTags };
     try {
       setPending(true);
-      const res = await axiosInstance.patch(`/product/${id}`, form);
-      console.log(res);
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("price", price);
+      formData.append("description", description);
+      formData.append("category", category);
+      selectedTags.forEach((tag) => formData.append("tags", tag));
+      if (image) formData.append("image", image);
+
+      const res = await axiosInstance.patch(`/product/${id}`, formData);
+      toast.success(res.data.message);
+
       router.push("/products");
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -164,6 +186,31 @@ export default function EditProduct() {
                   error={errors?.tags}
                 />
               )}
+
+              {/* recent image */}
+              {currentImage && (
+                <div className="mb-3">
+                  <p className="leading-none text-sm">Curent Image</p>
+                  <Image
+                    src={currentImage}
+                    width={400}
+                    height={400}
+                    alt="Preview"
+                    className="w-56 h-36 object-cover object-center mt-2 rounded-md"
+                    priority
+                  />
+                </div>
+              )}
+
+              <FormUpload
+                label="Image"
+                id="image"
+                preview={preview}
+                setImage={setImage}
+                error={errors?.image}
+                onChangeFile={onChangeFile}
+                onResetFile={onResetFile}
+              />
               <Button type="submit" disabled={pending}>
                 {pending ? "Updating..." : "Update"}
               </Button>

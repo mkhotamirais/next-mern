@@ -40,6 +40,10 @@ export interface IProduct {
     name: string;
   };
   tags: IProducttag[];
+  imageUrl: string;
+  user: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IPostcat {
@@ -54,6 +58,14 @@ export interface IPost {
   category: IPostcat;
   imageUrl: string;
   user: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export type TRoles = "user" | "editor" | "admin";
+
+export interface IParams {
+  q?: string;
+  category?: string;
+  tags?: string;
+}

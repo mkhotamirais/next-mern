@@ -11,25 +11,37 @@ import { IProductcat, IProducttag } from "@/lib/types";
 import FormMultiSelect from "@/components/FormMultiSelect";
 import FormTextarea from "@/components/FormTextarea";
 import ProtectedRouteRoles from "@/layouts/ProtectedRouteRoles";
+import { toast } from "sonner";
+import FormUpload from "@/components/FormUpload";
 
 export default function CreateProduct() {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [errors, setErrors] = useState<{
-    name?: string | string[];
-    price?: string | string[];
-    tags?: string | string[];
-    category?: string | string[];
-    description?: string | string[];
-  } | null>(null);
+  const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [errors, setErrors] = useState<Record<string, string | string[]> | null>(null);
+
   const router = useRouter();
 
   const [categories, setCategories] = useState<IProductcat[] | null>(null);
   const [tags, setTags] = useState<IProducttag[] | null>(null);
+
+  const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setImage(e.target.files[0]);
+      setPreview(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
+  const onResetFile = () => {
+    setImage(null);
+    setPreview(null);
+  };
 
   const getTags = async () => {
     try {
@@ -63,11 +75,25 @@ export default function CreateProduct() {
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = { name, price, description, category, tags: selectedTags };
     try {
       setPending(true);
-      const res = await axiosInstance.post("/product", form);
-      console.log(res);
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("price", price);
+      formData.append("description", description);
+      formData.append("category", category);
+      selectedTags.forEach((tag) => formData.append("tags", tag));
+      if (image) formData.append("image", image);
+
+      const res = await axiosInstance.post("/product", formData);
+      toast.success(res.data.message);
+      setName("");
+      setPrice("");
+      setDescription("");
+      setCategory("");
+      setSelectedTags([]);
+      setImage(null);
+      setErrors(null);
       router.push("/products");
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -138,6 +164,15 @@ export default function CreateProduct() {
                   error={errors?.tags}
                 />
               )}
+              <FormUpload
+                label="Image"
+                id="image"
+                preview={preview}
+                setImage={setImage}
+                error={errors?.image}
+                onChangeFile={onChangeFile}
+                onResetFile={onResetFile}
+              />
               <Button type="submit" disabled={pending}>
                 {pending ? "Creating..." : "Create"}
               </Button>

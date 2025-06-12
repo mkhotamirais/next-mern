@@ -9,6 +9,7 @@ import DelPost from "./DelPost";
 import ProtectedRoles from "@/layouts/ProtectedRoles";
 import Pending from "@/components/Pending";
 import Image from "next/image";
+import moment from "moment";
 
 export default function Posts() {
   const [data, setdata] = useState([]);
@@ -38,14 +39,24 @@ export default function Posts() {
         {data.map((post: IPost) => (
           <div key={post._id} className="bg-card rounded-md overflow-hidden cursor-pointer">
             <Link href={`/posts/show/${post._id}`}>
-              <Image src={post.imageUrl} alt={post.title} width={200} height={200} className="w-full" />
+              <Image
+                src={post.imageUrl}
+                alt={post.title}
+                width={400}
+                height={400}
+                className="w-full h-56 object-cover object-center"
+                priority
+              />
             </Link>
 
-            <div className="p-4">
+            <div className="p-4 space-y-2">
               <Link href={`/posts/show/${post._id}`} className="hover:underline">
                 <h3 className="h3">{smartTrim(post.title, 60)}</h3>
               </Link>
-              <p className="text-sm text-muted-foreground">{smartTrim(post.content, 120)}</p>
+              <p className="text-xs text-muted-foreground">{moment(post.createdAt).fromNow()}</p>
+              <div className="badge">{post?.category?.name || "category"}</div>
+              <p className="text-sm text-muted-foreground first-letter:uppercase">{smartTrim(post.content, 120)}</p>
+
               <ProtectedRoles roles={["admin", "editor"]}>
                 <div className="flex gap-2">
                   <Link href={`/posts/edit/${post._id}`} className="text-green-500">

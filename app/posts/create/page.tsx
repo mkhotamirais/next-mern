@@ -3,14 +3,12 @@
 import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
 import FormTextarea from "@/components/FormTextarea";
+import FormUpload from "@/components/FormUpload";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import ProtectedRouteRoles from "@/layouts/ProtectedRouteRoles";
 import { IProductcat } from "@/lib/types";
 import { axiosInstance, errMsg } from "@/lib/utils";
 import { AxiosError } from "axios";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -22,16 +20,23 @@ export default function CreatePost() {
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
-  const [errors, setErrors] = useState<{
-    title?: string | string[];
-    content?: string | string[];
-    category?: string | string[];
-    image?: string | string[];
-  } | null>(null);
+  const [errors, setErrors] = useState<Record<string, string | string[]> | null>(null);
 
   const [categories, setCategories] = useState<IProductcat[] | null>([]);
 
   const router = useRouter();
+
+  const onChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setImage(e.target.files[0]);
+      setPreview(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
+  const onResetFile = () => {
+    setImage(null);
+    setPreview(null);
+  };
 
   const getCategories = async () => {
     try {
@@ -75,6 +80,7 @@ export default function CreatePost() {
       setPending(false);
     }
   };
+
   return (
     <ProtectedRouteRoles authorizedRoles={["admin", "editor"]}>
       <section className="min-h-y py-4 bg-secondary">
@@ -107,25 +113,15 @@ export default function CreatePost() {
                   error={errors?.category}
                 />
               )}
-              <div>
-                <Label htmlFor="image">Image</Label>
-                <Input
-                  id="image"
-                  name="image"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files) {
-                      setImage(e.target.files[0]);
-                      setPreview(URL.createObjectURL(e.target.files[0]));
-                    }
-                  }}
-                />
-                {errors?.image && <p className="text-sm text-red-500 mt-1">{errors.image as string}</p>}
-                {preview && (
-                  <Image src={preview} width={200} height={200} alt="Preview" className="mt-2 max-w-xs rounded-md" />
-                )}
-              </div>
+              <FormUpload
+                label="Image"
+                id="image"
+                preview={preview}
+                setImage={setImage}
+                error={errors?.image}
+                onChangeFile={onChangeFile}
+                onResetFile={onResetFile}
+              />
               <Button type="submit" disabled={pending}>
                 {pending ? "Creating..." : "Create Post"}
               </Button>
