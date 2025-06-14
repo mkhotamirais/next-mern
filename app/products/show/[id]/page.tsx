@@ -1,10 +1,12 @@
 "use client";
 
+import Pending from "@/components/Pending";
 import { IProduct } from "@/lib/types";
-import { axiosInstance } from "@/lib/utils";
-import { AxiosError } from "axios";
+import { axiosInstance, errMsg } from "@/lib/utils";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
+import AddToCart from "./AddToCart";
 
 export default function ShowProduct() {
   const [data, setData] = useState<IProduct | null>(null);
@@ -18,9 +20,7 @@ export default function ShowProduct() {
       const res = await axiosInstance.get(`/product/${id}`);
       setData(res.data);
     } catch (error) {
-      if (error instanceof AxiosError) {
-        console.log(error);
-      }
+      errMsg(error);
     } finally {
       setPendingData(false);
     }
@@ -30,22 +30,37 @@ export default function ShowProduct() {
     getData();
   }, [getData]);
 
-  if (pendingData) return <h1>Loading...</h1>;
+  if (pendingData) return <Pending />;
 
   return (
-    <section className="bg-secondary min-h-y py-4">
+    <section className="bg-secondary min-h-y py-8">
       <div className="container">
-        <div className="bg-card p-6 rounded-md shadow-md">
-          <h1 className="h1">{data?.name}</h1>
-          <p className="p">{data?.description}</p>
-          <p className="p">{data?.price}</p>
-          <p>{data?.category?.name}</p>
-          <div>
-            {data?.tags.map((tag) => (
-              <p className="p" key={tag._id}>
-                {tag.name}
-              </p>
-            ))}
+        <div className="flex gap-6">
+          <div className="w-1/2">
+            <Image
+              src={data?.imageUrl || "/logo-mkhotami.png"}
+              alt={data?.name || "product"}
+              width={800}
+              height={800}
+              className="border object-cover object-center rounded-md"
+            />
+          </div>
+          <div className="w-1/2 bg-card p-6 rounded-md shadow-md space-y-4">
+            <h1 className="h1">{data?.name}</h1>
+            <p className="text-2xl font-bold">Rp{data?.price}</p>
+            <div className="flex flex-wrap items-center gap-1">
+              <div className="badge">{data?.category?.name || "category"}</div>
+              <div>•</div>
+              <div className="flex gap-1">
+                {data?.tags.map((tag) => (
+                  <div key={tag._id} className="badge">
+                    {tag.name}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <p className="text-sm text-muted-foreground">{data?.description}</p>
+            <AddToCart productId={data?._id || ""} />
           </div>
         </div>
       </div>

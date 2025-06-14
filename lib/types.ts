@@ -15,6 +15,7 @@ export interface IUser {
   _id: string;
   name: string;
   email: string;
+  phone: string;
   role: string;
   password?: string;
   confirmPassword?: string;
@@ -33,7 +34,7 @@ export interface IProducttag {
 export interface IProduct {
   _id: string;
   name: string;
-  price: string;
+  price: number;
   description: string;
   category: {
     _id: string;
@@ -68,4 +69,20 @@ export interface IParams {
   q?: string;
   category?: string;
   tags?: string;
+}
+
+export interface ICart {
+  _id: string;
+  productId: IProduct;
+  qty: number;
+  price?: number;
+}
+
+export interface IOrder {
+  _id: string;
+  userId: string;
+  items: ICart[];
+  total: number;
+  status: "pending" | "paid" | "shipped" | "cancelled";
+  createdAt: Date;
 }

@@ -74,7 +74,7 @@ export default function Posts() {
 
   return (
     <section className="min-h-y bg-secondary">
-      <div className="bg-gray-200 py-8">
+      <div className="py-8 bg-zinc-200 dark:bg-zinc-900">
         <div className="container">
           <h1 className="h1">Posts</h1>
         </div>
