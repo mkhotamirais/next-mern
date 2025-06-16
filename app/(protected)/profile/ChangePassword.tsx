@@ -16,7 +16,7 @@ export default function ChangePassword() {
     e.preventDefault();
     try {
       setPending(true);
-      const res = await axiosInstance.patch("/account/password", {
+      const res = await axiosInstance.patch("/common/account/password", {
         currentPassword,
         newPassword,
         confirmPassword,

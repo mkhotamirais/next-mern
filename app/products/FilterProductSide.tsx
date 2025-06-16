@@ -13,7 +13,7 @@ export default function FilterProductSide() {
 
   const getCategories = useCallback(async () => {
     try {
-      const res = await axiosInstance.get("/productcat");
+      const res = await axiosInstance.get("/public/productcat");
       setCategories(res.data);
     } catch (error) {
       errMsg(error);
@@ -22,7 +22,7 @@ export default function FilterProductSide() {
 
   const getTags = useCallback(async () => {
     try {
-      const res = await axiosInstance.get("/producttag");
+      const res = await axiosInstance.get("/public/producttag");
       setTags(res.data);
     } catch (error) {
       errMsg(error);

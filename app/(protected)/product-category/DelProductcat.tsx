@@ -24,7 +24,7 @@ export default function DelProductcat({ productCategory, getProductCategories }:
   const onDelete = async () => {
     try {
       setPending(true);
-      const res = await axiosInstance.delete(`/productcat/${productCategory._id}`);
+      const res = await axiosInstance.delete(`/editor/productcat/${productCategory._id}`);
       toast.success(res?.data?.message);
       getProductCategories();
     } catch (error) {

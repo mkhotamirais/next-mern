@@ -40,7 +40,7 @@ export default function CreatePost() {
 
   const getCategories = async () => {
     try {
-      const res = await axiosInstance.get("/postcat");
+      const res = await axiosInstance.get("/public/postcat");
       setCategories(res.data);
     } catch (error) {
       errMsg(error);
@@ -63,7 +63,7 @@ export default function CreatePost() {
       formData.append("category", category);
       if (image) formData.append("image", image);
 
-      const res = await axiosInstance.post("/post", formData);
+      const res = await axiosInstance.post("/editor/post", formData);
       toast.success(res.data.message);
       setTitle("");
       setContent("");

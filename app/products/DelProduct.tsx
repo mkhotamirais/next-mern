@@ -26,7 +26,7 @@ export default function DelProduct({ product, getProducts }: Props) {
   const onDelete = async () => {
     try {
       setPending(true);
-      const res = await axiosInstance.delete(`/product/${product._id}`);
+      const res = await axiosInstance.delete(`/editor/product/${product._id}`);
       getProducts();
       toast.success(res?.data?.message);
     } catch (error) {

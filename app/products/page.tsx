@@ -21,7 +21,7 @@ export default function Products() {
   const getProducts = useCallback(async () => {
     try {
       setPendingData(true);
-      const res = await axiosInstance.get("/product", {
+      const res = await axiosInstance.get("/public/product", {
         params,
       });
       setData(res.data);
@@ -44,7 +44,16 @@ export default function Products() {
         {data.map((product: IProduct) => (
           <div key={product._id} className="bg-card rounded-md shadow-md overflow-hidden">
             <Link href={`/products/show/${product._id}`}>
-              <Image src={product.imageUrl} alt={product.name} width={400} height={400} className="w-full" />
+              <Image
+                src={product.imageUrl}
+                alt={product.name}
+                width={400}
+                height={400}
+                // fill
+                // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="w-full h-36 sm:h-72 lg:h-56 object-cover object-center"
+                priority
+              />
             </Link>
             <div className="p-3 space-y-2">
               <Link href={`/products/show/${product._id}`} className="hover:underline">

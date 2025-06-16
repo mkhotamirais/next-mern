@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useParams } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import AddToCart from "./AddToCart";
+import ProtectedRoles from "@/layouts/ProtectedRoles";
 
 export default function ShowProduct() {
   const [data, setData] = useState<IProduct | null>(null);
@@ -17,7 +18,7 @@ export default function ShowProduct() {
   const getData = useCallback(async () => {
     try {
       setPendingData(true);
-      const res = await axiosInstance.get(`/product/${id}`);
+      const res = await axiosInstance.get(`/public/product/${id}`);
       setData(res.data);
     } catch (error) {
       errMsg(error);
@@ -35,17 +36,17 @@ export default function ShowProduct() {
   return (
     <section className="bg-secondary min-h-y py-8">
       <div className="container">
-        <div className="flex gap-6">
-          <div className="w-1/2">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="w-full sm:w-1/2">
             <Image
               src={data?.imageUrl || "/logo-mkhotami.png"}
               alt={data?.name || "product"}
               width={800}
               height={800}
-              className="border object-cover object-center rounded-md"
+              className="object-cover object-center rounded-md"
             />
           </div>
-          <div className="w-1/2 bg-card p-6 rounded-md shadow-md space-y-4">
+          <div className="w-full sm:w-1/2 bg-card p-6 rounded-md shadow-md space-y-4">
             <h1 className="h1">{data?.name}</h1>
             <p className="text-2xl font-bold">Rp{data?.price}</p>
             <div className="flex flex-wrap items-center gap-1">
@@ -60,7 +61,9 @@ export default function ShowProduct() {
               </div>
             </div>
             <p className="text-sm text-muted-foreground">{data?.description}</p>
-            <AddToCart productId={data?._id || ""} />
+            <ProtectedRoles roles={["user"]}>
+              <AddToCart productId={data?._id || ""} />
+            </ProtectedRoles>
           </div>
         </div>
       </div>

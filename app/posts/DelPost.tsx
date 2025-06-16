@@ -26,7 +26,7 @@ export default function DelPost({ post, getPosts }: Props) {
   const onDelete = async () => {
     try {
       setPending(true);
-      const res = await axiosInstance.delete(`/post/${post._id}`);
+      const res = await axiosInstance.delete(`/editor/post/${post._id}`);
       getPosts();
       toast.success(res?.data?.message);
     } catch (error) {

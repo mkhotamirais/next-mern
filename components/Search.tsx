@@ -43,7 +43,7 @@ export default function Search() {
     setKeyword(searchQuery);
     try {
       setPending(true);
-      const res = await axiosInstance.get("/search", { params: { q: searchQuery } });
+      const res = await axiosInstance.get("/search/search", { params: { q: searchQuery } });
       if (searchQuery) {
         setData(res.data);
       } else {

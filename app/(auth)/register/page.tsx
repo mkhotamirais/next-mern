@@ -30,7 +30,7 @@ export default function Register() {
     e.preventDefault();
     try {
       setPending(true);
-      const res = await axiosInstance.post("/signup", form);
+      const res = await axiosInstance.post("/public/signup", form);
       setUser(res.data.user);
       router.push("/dashboard");
     } catch (error) {

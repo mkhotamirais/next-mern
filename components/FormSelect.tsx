@@ -5,19 +5,27 @@ import { Dispatch, SetStateAction } from "react";
 interface FormSelectProps {
   label: string;
   options: { label: string; value: string }[] | null;
+  placeholder?: string;
   value: string;
-  onChange: Dispatch<SetStateAction<string>>;
+  onChange: (value: string) => void | Dispatch<SetStateAction<string>>;
   error?: string | string[];
 }
 
-export default function FormSelect({ label, options, value, onChange, error }: FormSelectProps) {
+export default function FormSelect({
+  label,
+  options,
+  placeholder = "categor",
+  value,
+  onChange,
+  error,
+}: FormSelectProps) {
   return (
     <div className="mb-3 space-y-1">
       <Label className="flex flex-col gap-1 items-start">
         {label}
         <Select value={value} onValueChange={onChange}>
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="Category" />
+            <SelectValue placeholder={placeholder} />
           </SelectTrigger>
           <SelectContent>
             {options?.map((option) => (

@@ -6,9 +6,25 @@
     ],
     "user_menu": [
         {"label": "Dashboard", "url": "/dashboard"},
+        {"label": "Profile", "url": "/profile"}
+    ],
+    "editor_menu": [
+        {"label": "Dashboard", "url": "/dashboard"},
         {"label": "Product Category", "url": "/product-category"},
         {"label": "Product Tag", "url": "/product-tag"},
         {"label": "Post Category", "url": "/post-category"},
         {"label": "Profile", "url": "/profile"}
+    ],
+    "admin_menu": [
+        {"label": "Dashboard", "url": "/dashboard"},
+        {"label": "Users", "url": "/users"},
+        {"label": "Product Category", "url": "/product-category"},
+        {"label": "Product Tag", "url": "/product-tag"},
+        {"label": "Post Category", "url": "/post-category"},
+        {"label": "Profile", "url": "/profile"}
+    ],
+    "profile_menu": [
+        {"label": "User Profile", "url": "/profile"},
+        {"label": "User Address", "url": "/profile/address"}
     ]
 }

@@ -8,7 +8,7 @@ export default function Orders() {
   const [data, setData] = useState<IOrder[]>([]);
   const getData = async () => {
     try {
-      const res = await axiosInstance.get("/orders");
+      const res = await axiosInstance.get("/user/orders");
       console.log(res);
       setData(res.data);
     } catch (error) {

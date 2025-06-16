@@ -51,7 +51,7 @@ export default function EditProduct() {
 
   const getTags = async () => {
     try {
-      const res = await axiosInstance.get("/producttag");
+      const res = await axiosInstance.get("/public/producttag");
       setTags(res.data);
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -62,7 +62,7 @@ export default function EditProduct() {
 
   const getCategories = async () => {
     try {
-      const res = await axiosInstance.get("/productcat");
+      const res = await axiosInstance.get("/public/productcat");
       setCategories(res.data);
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -74,7 +74,7 @@ export default function EditProduct() {
   const getData = useCallback(async () => {
     try {
       setPendingData(true);
-      const res = await axiosInstance.get(`/product/${id}`);
+      const res = await axiosInstance.get(`/public/product/${id}`);
       setName(res.data.name);
       setPrice(res.data.price);
       setDescription(res.data.description);
@@ -111,7 +111,7 @@ export default function EditProduct() {
       selectedTags.forEach((tag) => formData.append("tags", tag));
       if (image) formData.append("image", image);
 
-      const res = await axiosInstance.patch(`/product/${id}`, formData);
+      const res = await axiosInstance.patch(`/editor/product/${id}`, formData);
       toast.success(res.data.message);
 
       router.push("/products");

@@ -12,14 +12,16 @@ interface CartFormProps {
 }
 
 export default function CartForm({ item, onDeleteCartItem }: CartFormProps) {
-  const { data, setData } = useCartStore();
+  const { data, setData, setCartCount } = useCartStore();
   const [editedQty, setEditedQty] = useState<{ [key: string]: number }>({});
 
   const onEditQty = async (productId: string, qtyChange: number) => {
     try {
-      await axiosInstance.post("/cart", { productId, qty: qtyChange });
+      const res = await axiosInstance.post("/user/cart", { productId, qty: qtyChange });
 
       setData(data.map((item) => (item.productId._id === productId ? { ...item, qty: item.qty + qtyChange } : item)));
+      const totalQty = res.data.items.reduce((sum: number, item: ICart) => sum + item.qty, 0);
+      setCartCount(totalQty);
     } catch (error) {
       errMsg(error);
     }
@@ -30,7 +32,7 @@ export default function CartForm({ item, onDeleteCartItem }: CartFormProps) {
     const qty = Number((e.target as HTMLFormElement).qty.value);
 
     try {
-      await axiosInstance.post("/cart", { productId, qty });
+      const res = await axiosInstance.post("/user/cart", { productId, qty });
 
       setData(data.map((item) => (item._id === itemId ? { ...item, qty } : item)));
       setEditedQty((prev) => {
@@ -38,6 +40,12 @@ export default function CartForm({ item, onDeleteCartItem }: CartFormProps) {
         delete updated[itemId];
         return updated;
       });
+      const totalQty = res.data.items.reduce((sum: number, item: ICart) => sum + item.qty, 0);
+      setCartCount(totalQty);
+
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
     } catch (error) {
       errMsg(error);
     }
@@ -72,6 +80,7 @@ export default function CartForm({ item, onDeleteCartItem }: CartFormProps) {
             }));
           }
         }}
+        onFocus={(e) => e.target.select()}
         type="number"
         className="w-12 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
       />

@@ -9,9 +9,12 @@ import { useRouter } from "next/navigation";
 import { axiosInstance } from "@/lib/utils";
 import { useDataStore } from "@/lib/store";
 import ProtectedRouteAuth from "@/layouts/ProtectedRouteAuth";
+import { useCartStore } from "@/lib/cartStore";
+import { ICart } from "@/lib/types";
 
 export default function Login() {
   const { setUser } = useDataStore();
+  const { setCartCount } = useCartStore();
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState<{
     email?: string | string[];
@@ -28,8 +31,13 @@ export default function Login() {
     e.preventDefault();
     try {
       setPending(true);
-      const res = await axiosInstance.post("/signin", form);
+      const res = await axiosInstance.post("/public/signin", form);
       setUser(res.data.user);
+
+      const resCart = await axiosInstance.get("/user/cart");
+      const totalQty = resCart.data.items.reduce((sum: number, item: ICart) => sum + item.qty, 0);
+      setCartCount(totalQty);
+
       router.push("/dashboard");
     } catch (error) {
       if (error instanceof AxiosError) {

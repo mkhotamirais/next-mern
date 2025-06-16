@@ -18,7 +18,7 @@ export default function Posts() {
   const gatData = async () => {
     try {
       setPending(true);
-      const res = await axiosInstance.get("/post");
+      const res = await axiosInstance.get("/public/post");
       setdata(res.data);
     } catch (error) {
       errMsg(error);

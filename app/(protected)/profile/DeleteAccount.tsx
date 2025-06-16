@@ -22,7 +22,7 @@ export default function DeleteAccount() {
     e.preventDefault();
     try {
       setPending(true);
-      const res = await axiosInstance.delete("/account", { data: { password } });
+      const res = await axiosInstance.delete("/common/account", { data: { password } });
       toast.success(res.data.message);
       setShowDelete(false);
       setErrors(null);

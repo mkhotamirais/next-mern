@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import ProtectedRoles from "@/layouts/ProtectedRoles";
 import { useCartStore } from "@/lib/cartStore";
 import { ICart } from "@/lib/types";
 import { axiosInstance } from "@/lib/utils";
@@ -17,7 +16,7 @@ interface Props {
 }
 
 export default function AddToCart({ productId }: Props) {
-  const { selectedItemIds, setSelectedItemIds } = useCartStore();
+  const { selectedItemIds, setSelectedItemIds, setCartCount } = useCartStore();
   const [qty, setQty] = useState(0);
   const [pending, setPending] = useState(false);
 
@@ -27,8 +26,7 @@ export default function AddToCart({ productId }: Props) {
     e.preventDefault();
     try {
       setPending(true);
-      const res = await axiosInstance.post("/cart", { productId, qty });
-      console.log(res);
+      const res = await axiosInstance.post("/user/cart", { productId, qty });
       toast.success("Product added to cart");
       setQty(0);
       let id;
@@ -41,7 +39,9 @@ export default function AddToCart({ productId }: Props) {
       if (id) {
         setSelectedItemIds([...selectedItemIds, id]);
       }
-      // setSelectedItemIds([...selectedItemIds, id]);
+      const totalQty = res.data.items.reduce((sum: number, item: ICart) => sum + item.qty, 0);
+      setCartCount(totalQty);
+
       router.push("/products/cart");
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -71,12 +71,10 @@ export default function AddToCart({ productId }: Props) {
             +
           </Button>
         </div>
-        <ProtectedRoles roles={["user"]}>
-          <Button type="submit" disabled={!qty || pending}>
-            {pending ? <Loader2 /> : <ShoppingCart />}
-            Add to cart
-          </Button>
-        </ProtectedRoles>
+        <Button type="submit" disabled={!qty || pending}>
+          {pending ? <Loader2 /> : <ShoppingCart />}
+          Add to cart
+        </Button>
       </form>
     </div>
   );

@@ -13,6 +13,8 @@ interface CartStoreType {
   setData: (data: ICart[]) => void;
   selectedItemIds: string[];
   setSelectedItemIds: (selectedItemIds: string[]) => void;
+  cartCount: number;
+  setCartCount: (cartCount: number) => void;
 }
 
 export const useCartStore = create<CartStoreType>((set) => ({
@@ -20,4 +22,6 @@ export const useCartStore = create<CartStoreType>((set) => ({
   setData: (data) => set({ data }),
   selectedItemIds: initialItemIds || [],
   setSelectedItemIds: (selectedItemIds) => set({ selectedItemIds }),
+  cartCount: 0,
+  setCartCount: (cartCount) => set({ cartCount }),
 }));

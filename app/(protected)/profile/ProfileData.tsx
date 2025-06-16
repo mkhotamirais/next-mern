@@ -28,7 +28,7 @@ export default function ProfileData() {
     e.preventDefault();
     try {
       setPending(true);
-      const res = await axiosInstance.patch("/account", form);
+      const res = await axiosInstance.patch("/common/account", form);
       toast.success(res.data.message);
       setErrors(null);
     } catch (error) {

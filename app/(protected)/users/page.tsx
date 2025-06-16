@@ -16,7 +16,7 @@ export default function Users() {
     setPending(true);
     const getUsers = async () => {
       try {
-        const res = await axiosInstance.get("/users");
+        const res = await axiosInstance.get("/admin/users");
         setUsers(res.data);
       } catch (error) {
         if (error instanceof AxiosError) {

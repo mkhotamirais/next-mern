@@ -4,9 +4,7 @@ import NavMobile from "./NavMobile";
 import NavUser from "./NavUser";
 import { ThemeToggle } from "./ThemeToggle";
 import Search from "@/components/Search";
-import Link from "next/link";
-import { ShoppingCart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import NavCart from "./NavCart";
 
 export default function Header() {
   return (
@@ -19,11 +17,7 @@ export default function Header() {
         <div className="flex items-center gap-2 md:gap-3">
           <NavDesktop />
           <Search />
-          <Link href="/products/cart">
-            <Button variant="outline" size="icon" className="">
-              <ShoppingCart />
-            </Button>
-          </Link>
+          <NavCart />
           <NavUser />
           <ThemeToggle />
         </div>

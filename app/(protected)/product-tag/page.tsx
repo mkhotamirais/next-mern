@@ -2,28 +2,29 @@
 
 import FormInput from "@/components/FormInput";
 import { Button } from "@/components/ui/button";
-import { IPostcat } from "@/lib/types";
+import { IProducttag } from "@/lib/types";
 import { axiosInstance } from "@/lib/utils";
 import { AxiosError } from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import DelPostcat from "./DelPostcat";
+import DelProducttag from "./DelProducttag";
+import ProtectedRouteRoles from "@/layouts/ProtectedRouteRoles";
 
-export default function PostCategory() {
+export default function ProductTag() {
   const [name, setName] = useState("");
   const [pending, setPending] = useState(false);
   const [errors, setErrors] = useState<{ name?: string | string[] } | undefined>(undefined);
   const [errors2, setErrors2] = useState<{ name?: string | string[] } | undefined>(undefined);
-  const [postCategories, setPostCategories] = useState<IPostcat[] | null>(null);
+  const [productTags, setProductTags] = useState<IProducttag[] | null>(null);
   const [pendingData, setPendingData] = useState(false);
 
   const [isEdit, setIsEdit] = useState<string | null>(null);
   const [newName, setNewName] = useState("");
   const [pendingUpdate, setPendingUpdate] = useState(false);
 
-  const onEditMode = (postCategory: IPostcat) => {
-    setIsEdit(postCategory._id);
-    setNewName(postCategory.name);
+  const onEditMode = (productTag: IProducttag) => {
+    setIsEdit(productTag._id);
+    setNewName(productTag.name);
   };
 
   const closeEditMode = () => {
@@ -33,11 +34,11 @@ export default function PostCategory() {
     setNewName("");
   };
 
-  const getPostCategories = async () => {
+  const getProductTags = async () => {
     try {
       setPendingData(true);
-      const res = await axiosInstance.get("/postcat");
-      setPostCategories(res.data);
+      const res = await axiosInstance.get("/public/producttag");
+      setProductTags(res.data);
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error);
@@ -48,16 +49,16 @@ export default function PostCategory() {
   };
 
   useEffect(() => {
-    getPostCategories();
+    getProductTags();
   }, []);
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axiosInstance.post("/postcat", { name });
+      const res = await axiosInstance.post("/editor/producttag", { name });
       toast.success(res?.data?.message);
       setName("");
-      await getPostCategories();
+      await getProductTags();
     } catch (error) {
       if (error instanceof AxiosError) {
         if (process.env.NODE_ENV === "development") console.log(error);
@@ -68,13 +69,13 @@ export default function PostCategory() {
     }
   };
 
-  const updatePostCategory = async (e: React.FormEvent<HTMLFormElement>, id: string) => {
+  const updateProductTag = async (e: React.FormEvent<HTMLFormElement>, id: string) => {
     e.preventDefault();
     try {
       setPendingUpdate(true);
-      const res = await axiosInstance.patch(`/postcat/${id}`, { name: newName });
+      const res = await axiosInstance.patch(`/editor/producttag/${id}`, { name: newName });
       toast.success(res?.data?.message);
-      await getPostCategories();
+      await getProductTags();
       closeEditMode();
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -88,18 +89,18 @@ export default function PostCategory() {
 
   let content;
   if (pendingData) content = <p>Loading...</p>;
-  if (postCategories?.length === 0) content = <p>No post category found</p>;
-  if (postCategories) {
+  if (productTags?.length === 0) content = <p>No product tag found</p>;
+  if (productTags) {
     content = (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-        {postCategories.map((postCategory: IPostcat) => (
-          <div key={postCategory._id} className="py-2 px-3 rounded-md bg-secondary">
-            {isEdit === postCategory._id ? (
-              <form onSubmit={(e) => updatePostCategory(e, postCategory._id)}>
+        {productTags.map((productTag: IProducttag) => (
+          <div key={productTag._id} className="py-2 px-3 rounded-md bg-secondary">
+            {isEdit === productTag._id ? (
+              <form onSubmit={(e) => updateProductTag(e, productTag._id)}>
                 <FormInput
                   id="name"
                   // label="Name"
-                  placeholder="Post category name.."
+                  placeholder="Product tag name.."
                   value={newName}
                   handleChange={(e) => setNewName(e.target.value)}
                   error={errors2?.name}
@@ -113,12 +114,12 @@ export default function PostCategory() {
               </form>
             ) : (
               <>
-                <h3 className="px-2 py-1">{postCategory.name}</h3>
+                <h3 className="px-2 py-1">{productTag.name}</h3>
                 <div className="flex gap-1">
-                  <button type="button" onClick={() => onEditMode(postCategory)} className="btn-edit">
+                  <button type="button" onClick={() => onEditMode(productTag)} className="btn-edit">
                     Edit
                   </button>
-                  <DelPostcat postCategory={postCategory} getPostCategories={getPostCategories} />
+                  <DelProducttag productTag={productTag} getProductTags={getProductTags} />
                 </div>
               </>
             )}
@@ -129,40 +130,42 @@ export default function PostCategory() {
   }
 
   return (
-    <section className="min-h-y bg-secondary py-4">
-      <div className="container">
-        <div className="bg-card p-6 rounded-md max-w-2xl">
-          <div className="mb-4">
-            <h1 className="h1">Post Category</h1>
-          </div>
-          {/* Create */}
-          <div className="mb-4">
-            <div className="mb-3">
-              <h2 className="h2">Create Post Category</h2>
+    <ProtectedRouteRoles authorizedRoles={["editor", "admin"]}>
+      <section className="min-h-y bg-secondary py-4">
+        <div className="container">
+          <div className="bg-card p-6 rounded-md max-w-2xl">
+            <div className="mb-4">
+              <h1 className="h1">Product Tag</h1>
             </div>
-            <form onSubmit={onSubmit}>
-              <FormInput
-                id="name"
-                label="Name"
-                placeholder="Post category name.."
-                value={name}
-                handleChange={(e) => setName(e.target.value)}
-                error={errors?.name}
-              />
-              <Button type="submit" disabled={pending}>
-                {pending ? "Saving..." : "Save"}
-              </Button>
-            </form>
-          </div>
-          {/* List */}
-          <div className="mb-4">
-            <div className="mb-3">
-              <h2 className="h2">Post Category List</h2>
+            {/* Create */}
+            <div className="mb-4">
+              <div className="mb-3">
+                <h2 className="h2">Create Product Tag</h2>
+              </div>
+              <form onSubmit={onSubmit}>
+                <FormInput
+                  id="name"
+                  label="Name"
+                  placeholder="Product tag name.."
+                  value={name}
+                  handleChange={(e) => setName(e.target.value)}
+                  error={errors?.name}
+                />
+                <Button type="submit" disabled={pending}>
+                  {pending ? "Saving..." : "Save"}
+                </Button>
+              </form>
             </div>
-            {content}
+            {/* List */}
+            <div className="mb-4">
+              <div className="mb-3">
+                <h2 className="h2">Product Tag List</h2>
+              </div>
+              {content}
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </ProtectedRouteRoles>
   );
 }

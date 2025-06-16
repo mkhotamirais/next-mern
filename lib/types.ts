@@ -86,3 +86,15 @@ export interface IOrder {
   status: "pending" | "paid" | "shipped" | "cancelled";
   createdAt: Date;
 }
+
+export interface IAddress {
+  _id: string;
+  label: string;
+  province: string;
+  regency: string;
+  district: string;
+  village: string;
+  postalCode: string;
+  fullAddress: string;
+  isDefault: boolean;
+}

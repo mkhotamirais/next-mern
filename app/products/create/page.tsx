@@ -45,7 +45,7 @@ export default function CreateProduct() {
 
   const getTags = async () => {
     try {
-      const res = await axiosInstance.get("/producttag");
+      const res = await axiosInstance.get("/public/producttag");
       setTags(res.data);
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -56,7 +56,7 @@ export default function CreateProduct() {
 
   const getCategories = async () => {
     try {
-      const res = await axiosInstance.get("/productcat");
+      const res = await axiosInstance.get("/public/productcat");
       setCategories(res.data);
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -85,7 +85,7 @@ export default function CreateProduct() {
       selectedTags.forEach((tag) => formData.append("tags", tag));
       if (image) formData.append("image", image);
 
-      const res = await axiosInstance.post("/product", formData);
+      const res = await axiosInstance.post("/editor/product", formData);
       toast.success(res.data.message);
       setName("");
       setPrice("");

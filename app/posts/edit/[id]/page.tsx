@@ -48,7 +48,7 @@ export default function EditPost() {
 
   const getCategories = async () => {
     try {
-      const res = await axiosInstance.get("/postcat");
+      const res = await axiosInstance.get("/public/postcat");
       setCategories(res.data);
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -60,7 +60,7 @@ export default function EditPost() {
   const getData = useCallback(async () => {
     try {
       setPendingData(true);
-      const res = await axiosInstance.get(`/post/${id}`);
+      const res = await axiosInstance.get(`/public/post/${id}`);
       setTitle(res.data.title);
       setContent(res.data.content);
       setCategory(res.data.category);
@@ -91,7 +91,7 @@ export default function EditPost() {
       formData.append("category", category);
       if (image) formData.append("image", image);
 
-      const res = await axiosInstance.patch(`/post/${id}`, formData);
+      const res = await axiosInstance.patch(`/editor/post/${id}`, formData);
       toast.success(res.data.message);
       router.push("/posts");
     } catch (error) {

@@ -19,7 +19,7 @@ export default function ShowPost() {
   const getData = useCallback(async () => {
     try {
       setPending(true);
-      const res = await axiosInstance.get(`/post/${id}`);
+      const res = await axiosInstance.get(`/public/post/${id}`);
       setData(res.data);
     } catch (error) {
       errMsg(error);
@@ -31,7 +31,7 @@ export default function ShowPost() {
   const getOtherData = useCallback(async () => {
     try {
       setPending(true);
-      const res = await axiosInstance.get(`/post`);
+      const res = await axiosInstance.get(`/public/post`);
       const resultExceptCurrent = res.data.filter((post: IPost) => post._id !== id);
       setOtherData(resultExceptCurrent);
     } catch (error) {
@@ -75,9 +75,9 @@ export default function ShowPost() {
                     alt={post.title ?? "image"}
                     width={100}
                     height={100}
-                    className="h-20 w-1/3 object-cover object-center rounded-l"
+                    className="h-full w-1/3 object-cover object-center rounded-l"
                   />
-                  <div className="flex flex-col">
+                  <div className="w-2/3 flex flex-col">
                     <h3 className="h3 !text-base group-hover:underline">{smartTrim(post.title, 50)}</h3>
                     <p className="text-sm text-muted-foreground mt-auto">{moment(data?.createdAt).fromNow()}</p>
                   </div>

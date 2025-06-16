@@ -10,7 +10,7 @@ export default function UserProvider({ children }: { children: React.ReactNode }
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axiosInstance.get("/account");
+        const res = await axiosInstance.get("/common/account");
         setUser(res.data);
       } catch {
         setUser(null);

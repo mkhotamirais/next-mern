@@ -7,26 +7,26 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { IProducttag } from "@/lib/types";
+import { IPostcat } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { axiosInstance } from "@/lib/utils";
 import { toast } from "sonner";
 
 interface Props {
-  productTag: IProducttag;
-  getProductTags: () => Promise<void>;
+  postCategory: IPostcat;
+  getPostCategories: () => Promise<void>;
 }
 
-export default function DelProducttag({ productTag, getProductTags }: Props) {
+export default function DelPostcat({ postCategory, getPostCategories }: Props) {
   const [pending, setPending] = useState(false);
 
   const onDelete = async () => {
     try {
       setPending(true);
-      const res = await axiosInstance.delete(`/producttag/${productTag._id}`);
+      const res = await axiosInstance.delete(`/editor/postcat/${postCategory._id}`);
       toast.success(res?.data?.message);
-      getProductTags();
+      getPostCategories();
     } catch (error) {
       console.log(error);
     } finally {
@@ -42,7 +42,7 @@ export default function DelProducttag({ productTag, getProductTags }: Props) {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader className="text-left">
-          <DialogTitle>Delete {productTag.name}</DialogTitle>
+          <DialogTitle>Delete {postCategory.name}</DialogTitle>
           <DialogDescription>This action cannot be undone. Are you sure?</DialogDescription>
         </DialogHeader>
         <div className="flex gap-2">

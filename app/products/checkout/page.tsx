@@ -1,23 +1,26 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useCartStore } from "@/lib/cartStore";
 import { ICart } from "@/lib/types";
 import { axiosInstance, errMsg } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
 export default function Checkout() {
+  const { data, setData, selectedItemIds, setSelectedItemIds, setCartCount } = useCartStore();
   const [items, setItems] = useState<ICart[]>([]);
   const searchParams = useSearchParams();
   const router = useRouter();
 
   useEffect(() => {
     const getSelectedItems = async () => {
-      const selectedIds = searchParams.getAll("productIds");
+      const selectedIds = searchParams.getAll("itemIds");
 
       try {
-        const res = await axiosInstance.get("/cart");
-        const filtered = res.data.items.filter((item: ICart) => selectedIds.includes(item.productId._id));
+        const res = await axiosInstance.get("/user/cart");
+        console.log(res);
+        const filtered = res.data.items.filter((item: ICart) => selectedIds.includes(item._id));
         setItems(filtered);
       } catch (error) {
         errMsg(error);
@@ -31,14 +34,21 @@ export default function Checkout() {
 
   const handleBayarSekarang = async () => {
     try {
-      const selectedProductIds = items.map((item) => item.productId._id);
+      const selectedItemIdsToCheckout = items.map((item) => item._id); // karena itemIds adalah cart item _id
 
-      await axiosInstance.post("/orders", {
-        selectedProductIds,
-        // sementara tanpa address dan paymentMethod
-        // address: "Alamat pengiriman",
-        // paymentMethod: "cod",
+      await axiosInstance.post("/user/orders", {
+        selectedProductIds: items.map((item) => item.productId._id),
       });
+
+      const updatedCart = data.filter((item) => !selectedItemIdsToCheckout.includes(item._id));
+      setData(updatedCart);
+
+      const updatedSelectedIds = selectedItemIds.filter((id) => !selectedItemIdsToCheckout.includes(id));
+      setSelectedItemIds(updatedSelectedIds);
+      localStorage.setItem("selectedItemIds", JSON.stringify(updatedSelectedIds));
+
+      const newTotalQty = updatedCart.reduce((sum, item) => sum + item.qty, 0);
+      setCartCount(newTotalQty);
 
       alert("Berhasil checkout!");
       router.push("/products/orders");
@@ -46,19 +56,22 @@ export default function Checkout() {
       errMsg(error);
     }
   };
+
   return (
     <section className="container py-6">
-      <h1 className="h1 mb-4">Checkout</h1>
-      {items.map((item) => (
-        <div key={item._id} className="flex justify-between items-center border-b py-2">
-          <div>
-            {item.productId.name} x {item.qty}
+      <div className="max-w-xl">
+        <h1 className="h1 mb-4">Checkout</h1>
+        {items.map((item) => (
+          <div key={item._id} className="flex justify-between items-center border-b py-2">
+            <div>
+              {item.productId.name} x {item.qty}
+            </div>
+            <div>Rp{item.productId.price.toLocaleString()}</div>
           </div>
-          <div>Rp{item.productId.price.toLocaleString()}</div>
-        </div>
-      ))}
-      <div className="font-bold mt-4">Total: Rp{total.toLocaleString()}</div>
-      <Button onClick={handleBayarSekarang}>Bayar Sekarang</Button>
+        ))}
+        <div className="font-bold mt-4 mb-2">Total: Rp{total.toLocaleString()}</div>
+        <Button onClick={handleBayarSekarang}>Bayar Sekarang</Button>
+      </div>
     </section>
   );
 }
