@@ -8,7 +8,7 @@ import { useCheckoutStore } from "@/lib/checkoutStore";
 import { IAddress } from "@/lib/types";
 import { axiosInstance, capitalize, errMsg } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 export default function CheckoutAddress() {
   const [data, setData] = useState<IAddress[]>([]);
@@ -18,20 +18,24 @@ export default function CheckoutAddress() {
 
   const router = useRouter();
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     try {
       const res = await axiosInstance.get("/user/account/address");
+      if (!res.data.length) {
+        router.push("/profile/address/create");
+        return;
+      }
       setData(res.data);
     } catch (error) {
       errMsg(error);
     } finally {
       setPendingData(false);
     }
-  };
+  }, [router]);
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [getData]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const address = data.find((address) => address._id === e.target.value);

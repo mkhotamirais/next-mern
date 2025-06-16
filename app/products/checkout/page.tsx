@@ -5,38 +5,46 @@ import { useCartStore } from "@/lib/cartStore";
 import { ICart } from "@/lib/types";
 import { axiosInstance, errMsg } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import AddressCheckout from "./AddressCheckout";
 import { useCheckoutStore } from "@/lib/checkoutStore";
 import { toast } from "sonner";
+import Pending from "@/components/Pending";
 
 export default function Checkout() {
   const { data, setData, selectedItemIds, setSelectedItemIds, setCartCount } = useCartStore();
   const { address } = useCheckoutStore();
   const [items, setItems] = useState<ICart[]>([]);
+  const [pendingItems, setPendingItems] = useState(false);
+  const [pending, setPending] = useState(false);
+
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  useEffect(() => {
-    const getSelectedItems = async () => {
-      const selectedIds = searchParams.getAll("itemIds");
+  const getSelectedItems = useCallback(async () => {
+    const selectedIds = searchParams.getAll("itemIds");
 
-      try {
-        const res = await axiosInstance.get("/user/cart");
-        const filtered = res.data.items.filter((item: ICart) => selectedIds.includes(item._id));
-        setItems(filtered);
-      } catch (error) {
-        errMsg(error);
-      }
-    };
-
-    getSelectedItems();
+    try {
+      setPendingItems(true);
+      const res = await axiosInstance.get("/user/cart");
+      const filtered = res.data.items.filter((item: ICart) => selectedIds.includes(item._id));
+      setItems(filtered);
+    } catch (error) {
+      errMsg(error);
+    } finally {
+      setPendingItems(false);
+    }
   }, [searchParams]);
+
+  useEffect(() => {
+    getSelectedItems();
+  }, [getSelectedItems]);
 
   const total = items.reduce((sum, item) => sum + item.productId.price * item.qty, 0);
 
   const handleBayarSekarang = async () => {
     try {
+      setPending(true);
       const selectedItemIdsToCheckout = items.map((item) => item._id); // karena itemIds adalah cart item _id
 
       const res = await axiosInstance.post("/user/orders", {
@@ -58,8 +66,12 @@ export default function Checkout() {
       router.push(`/products/invoice/${res.data.order._id}`);
     } catch (error) {
       errMsg(error);
+    } finally {
+      setPending(false);
     }
   };
+
+  if (pendingItems) return <Pending />;
 
   return (
     <section className="container py-6">
@@ -79,7 +91,9 @@ export default function Checkout() {
         {/* untuk payment method nanti */}
         <div>
           <div className="font-bold mt-4 mb-2">Total: Rp{total.toLocaleString()}</div>
-          <Button onClick={handleBayarSekarang}>Bayar Sekarang</Button>
+          <Button onClick={handleBayarSekarang} disabled={pending}>
+            {pending ? "Loading..." : "Bayar Sekarang"}
+          </Button>
         </div>
       </div>
     </section>

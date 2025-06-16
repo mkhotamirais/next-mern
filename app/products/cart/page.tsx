@@ -15,6 +15,7 @@ import { ICart } from "@/lib/types";
 
 export default function Cart() {
   const { data, setData, selectedItemIds, setSelectedItemIds, setCartCount } = useCartStore();
+  const [isAddresses, setIsAddresses] = useState(false);
   const [pendingData, setPendingData] = useState(false);
 
   const router = useRouter();
@@ -37,6 +38,15 @@ export default function Cart() {
       setPendingData(false);
     }
   }, [setData, setCartCount]);
+
+  const getAddresses = useCallback(async () => {
+    try {
+      const res = await axiosInstance.get("/user/account/address");
+      setIsAddresses(res.data.length > 0);
+    } catch (error) {
+      errMsg(error);
+    }
+  }, []);
 
   const onDeleteCartItem = async (itemId: string) => {
     try {
@@ -77,12 +87,20 @@ export default function Cart() {
 
     const params = new URLSearchParams();
     selectedItemIds.forEach((id) => params.append("itemIds", id));
-    router.push(`/products/checkout?${params.toString()}`);
+    if (!isAddresses) {
+      router.push("/profile/address/create");
+    } else {
+      router.push(`/products/checkout?${params.toString()}`);
+    }
   };
 
   useEffect(() => {
     getData();
   }, [getData]);
+
+  useEffect(() => {
+    getAddresses();
+  }, [getAddresses]);
 
   if (pendingData) return <Pending />;
 
