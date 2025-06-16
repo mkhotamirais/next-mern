@@ -55,8 +55,10 @@ export default function ProfileAddress() {
                   Prov. {capitalize(address.province)}, {address.postalCode}
                 </p>
                 {address.isDefault && <Badge>Default Address</Badge>}
-                <div>
-                  <Link href={`/profile/address/edit/${address._id}`}>Edit</Link>
+                <div className="flex gap-3">
+                  <Link href={`/profile/address/edit/${address._id}`} className="text-green-500">
+                    Edit
+                  </Link>
                   <DeleteAddress address={address} getData={getData} />
                 </div>
               </div>

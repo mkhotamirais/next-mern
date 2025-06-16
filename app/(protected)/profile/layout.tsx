@@ -16,17 +16,15 @@ export default function ProfileLayout({ children }: { children: React.ReactNode 
             <div className="mb-4">
               <h1 className="h1">Profile</h1>
             </div>
-            <div className="flex gap-1 mb-2">
-              {/* {c.profile_menu.map((item) => (
-                <Link href={item.url} key={item.url}>
-                  <Button variant={item.url === pathname ? "default" : "link"}>{item.label}</Button>
-                </Link>
-                ))} */}
+            <div className="flex gap-1 mb-2 overflow-x-auto [&::-webkit-scrollbar]:hidden">
               <Link href={"/profile"}>
                 <Button variant={pathname === "/profile" ? "default" : "link"}>User Profile</Button>
               </Link>
               <Link href={"/profile/address"}>
                 <Button variant={pathname.startsWith("/profile/address") ? "default" : "link"}>User Address</Button>
+              </Link>
+              <Link href={"/profile/orders"}>
+                <Button variant={pathname.startsWith("/profile/orders") ? "default" : "link"}>Orders</Button>
               </Link>
             </div>
             {children}

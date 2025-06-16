@@ -6,9 +6,13 @@ import { ICart } from "@/lib/types";
 import { axiosInstance, errMsg } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import AddressCheckout from "./AddressCheckout";
+import { useCheckoutStore } from "@/lib/checkoutStore";
+import { toast } from "sonner";
 
 export default function Checkout() {
   const { data, setData, selectedItemIds, setSelectedItemIds, setCartCount } = useCartStore();
+  const { address } = useCheckoutStore();
   const [items, setItems] = useState<ICart[]>([]);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -19,7 +23,6 @@ export default function Checkout() {
 
       try {
         const res = await axiosInstance.get("/user/cart");
-        console.log(res);
         const filtered = res.data.items.filter((item: ICart) => selectedIds.includes(item._id));
         setItems(filtered);
       } catch (error) {
@@ -36,8 +39,9 @@ export default function Checkout() {
     try {
       const selectedItemIdsToCheckout = items.map((item) => item._id); // karena itemIds adalah cart item _id
 
-      await axiosInstance.post("/user/orders", {
+      const res = await axiosInstance.post("/user/orders", {
         selectedProductIds: items.map((item) => item.productId._id),
+        address,
       });
 
       const updatedCart = data.filter((item) => !selectedItemIdsToCheckout.includes(item._id));
@@ -50,8 +54,8 @@ export default function Checkout() {
       const newTotalQty = updatedCart.reduce((sum, item) => sum + item.qty, 0);
       setCartCount(newTotalQty);
 
-      alert("Berhasil checkout!");
-      router.push("/products/orders");
+      toast.success("Checkout berhasil");
+      router.push(`/products/invoice/${res.data.order._id}`);
     } catch (error) {
       errMsg(error);
     }
@@ -61,16 +65,22 @@ export default function Checkout() {
     <section className="container py-6">
       <div className="max-w-xl">
         <h1 className="h1 mb-4">Checkout</h1>
-        {items.map((item) => (
-          <div key={item._id} className="flex justify-between items-center border-b py-2">
-            <div>
-              {item.productId.name} x {item.qty}
+        <AddressCheckout />
+        <div>
+          {items.map((item) => (
+            <div key={item._id} className="flex justify-between items-center border-b py-2">
+              <div>
+                {item.productId.name} x {item.qty}
+              </div>
+              <div>Rp{item.productId.price.toLocaleString()}</div>
             </div>
-            <div>Rp{item.productId.price.toLocaleString()}</div>
-          </div>
-        ))}
-        <div className="font-bold mt-4 mb-2">Total: Rp{total.toLocaleString()}</div>
-        <Button onClick={handleBayarSekarang}>Bayar Sekarang</Button>
+          ))}
+        </div>
+        {/* untuk payment method nanti */}
+        <div>
+          <div className="font-bold mt-4 mb-2">Total: Rp{total.toLocaleString()}</div>
+          <Button onClick={handleBayarSekarang}>Bayar Sekarang</Button>
+        </div>
       </div>
     </section>
   );

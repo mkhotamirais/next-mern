@@ -81,6 +81,7 @@ export interface ICart {
 export interface IOrder {
   _id: string;
   userId: string;
+  address: IAddress;
   items: ICart[];
   total: number;
   status: "pending" | "paid" | "shipped" | "cancelled";
