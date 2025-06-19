@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { IPost } from "@/lib/types";
+import { IParams, IPost } from "@/lib/types";
 import { axiosInstance, errMsg, smartTrim } from "@/lib/utils";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
@@ -10,47 +10,35 @@ import ProtectedRoles from "@/layouts/ProtectedRoles";
 import Pending from "@/components/Pending";
 import Image from "next/image";
 import moment from "moment";
-import { usePostStore } from "@/lib/postStore";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import { useDebouncedCallback } from "use-debounce";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { FilterPosts } from "./FilterPosts";
 
 export default function Posts() {
   const [data, setdata] = useState([]);
   const [pending, setPending] = useState(false);
-  const { params, setParams } = usePostStore();
+  // const { params } = usePostStore();
 
-  const router = useRouter();
-  const searchParam = useSearchParams();
+  const searchParams = useSearchParams();
 
-  const onSearch = useDebouncedCallback((e) => {
-    const newParams = new URLSearchParams(searchParam);
-    if (e) {
-      newParams.set("q", e);
-      setParams({ ...params, q: e });
-    } else {
-      newParams.delete("q");
-      setParams({ ...params, q: undefined });
-    }
-    router.push(`?${newParams.toString()}`);
-  }, 300);
-
-  const getData = useCallback(async () => {
+  const getData = useCallback(async (par?: IParams) => {
     try {
       setPending(true);
-      const res = await axiosInstance.get("/public/post", { params });
+      const res = await axiosInstance.get("/public/post", { params: par });
       setdata(res.data);
     } catch (error) {
       errMsg(error);
     } finally {
       setPending(false);
     }
-  }, [params]);
+  }, []);
+
+  const q = searchParams.get("q");
 
   useEffect(() => {
-    getData();
-  }, [getData]);
+    const params: IParams = {};
+    if (q) params.q = q;
+    getData(params);
+  }, [getData, q]);
 
   let content;
   if (data.length === 0) content = <h1>No posts found</h1>;
@@ -97,15 +85,9 @@ export default function Posts() {
     <section className="min-h-y bg-secondary">
       <div className="py-8 bg-zinc-200 dark:bg-zinc-900">
         <div className="container">
-          <h1 className="h1">Posts</h1>
-          <div className="relative">
-            <Search size={16} className="absolute left-2 top-1/2 -translate-y-1/2" />
-            <Input
-              type="search"
-              placeholder="Search post.."
-              className="pl-8"
-              onChange={(e) => onSearch(e.target.value)}
-            />
+          <h1 className="h1 mb-2">Posts</h1>
+          <div className="max-w-sm">
+            <FilterPosts />
           </div>
         </div>
       </div>

@@ -2,11 +2,11 @@ import { create } from "zustand";
 import { IParams } from "./types";
 
 interface IPostStore {
-  params: IParams | null;
-  setParams: (params: IParams | null) => void;
+  params: IParams;
+  setParams: (params: IParams) => void;
 }
 
 export const usePostStore = create<IPostStore>((set) => ({
-  params: null,
+  params: {},
   setParams: (params) => set({ params }),
 }));
