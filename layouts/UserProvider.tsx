@@ -1,5 +1,6 @@
 "use client";
 
+import Pending from "@/components/Pending";
 import { useDataStore } from "@/lib/store";
 import { axiosInstance } from "@/lib/utils";
 import React, { useEffect } from "react";
@@ -21,6 +22,6 @@ export default function UserProvider({ children }: { children: React.ReactNode }
     fetchUser();
   }, [setUser, setIsMounted]);
 
-  if (!isMounted) return null;
+  if (!isMounted) return <Pending />;
   return <>{children}</>;
 }
