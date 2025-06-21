@@ -14,6 +14,7 @@ import {
 import { Menu } from "lucide-react";
 import c from "@/lib/content.json";
 import Link from "next/link";
+import { ThemeToggle } from "./ThemeToggle";
 
 export default function NavMobile() {
   return (
@@ -31,17 +32,22 @@ export default function NavMobile() {
             </SheetTitle>
             <SheetDescription className="hidden"></SheetDescription>
           </SheetHeader>
-          <nav className="px-3 flex flex-col gap-1">
-            {c.main_menu.map((item, i) => (
-              <SheetClose key={i} asChild>
-                <Link href={item.url}>
-                  <Button variant="outline" className="w-full justify-start">
-                    {item.label}
-                  </Button>
-                </Link>
-              </SheetClose>
-            ))}
-          </nav>
+          <div className="px-3">
+            <div className="flex justify-end mb-2">
+              <ThemeToggle />
+            </div>
+            <nav className="flex flex-col gap-1">
+              {c.main_menu.map((item, i) => (
+                <SheetClose key={i} asChild>
+                  <Link href={item.url}>
+                    <Button variant="outline" className="w-full justify-start">
+                      {item.label}
+                    </Button>
+                  </Link>
+                </SheetClose>
+              ))}
+            </nav>
+          </div>
         </SheetContent>
       </Sheet>
     </div>

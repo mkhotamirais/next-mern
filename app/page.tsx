@@ -1,9 +1,13 @@
+import HeroSection from "./(home-sections)/HeroSection";
+import PostSection from "./(home-sections)/PostSection";
+import ProductSection from "./(home-sections)/ProductSection";
+
 export default function Home() {
   return (
-    <section className="min-h-y bg-secondary py-4">
-      <div className="container">
-        <h1 className="h1">Home</h1>
-      </div>
-    </section>
+    <div>
+      <HeroSection />
+      <ProductSection />
+      <PostSection />
+    </div>
   );
 }

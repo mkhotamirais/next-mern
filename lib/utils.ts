@@ -53,7 +53,12 @@ export const smartTrim = (text: string, maxLength = 60) => {
 // }
 
 export const formatRupiah = (value: number) =>
-  new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(value);
+  new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value);
 
 export const capitalize = (text: string) => {
   if (!text) return "";

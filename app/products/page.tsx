@@ -8,10 +8,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import DelProduct from "./DelProduct";
 import Pending from "@/components/Pending";
 import ProtectedRoles from "@/layouts/ProtectedRoles";
-import Image from "next/image";
 import FilterProducts from "./FilterProducts";
 import FilterProductSide from "./FilterProductSide";
 import { useProductctStore } from "@/lib/productStore";
+import CardProduct from "@/components/CardProduct";
 
 export default function Products() {
   const [data, setData] = useState([]);
@@ -40,49 +40,18 @@ export default function Products() {
   if (data.length === 0) content = <h1>No products found</h1>;
   if (data.length > 0) {
     content = (
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-1 lg:gap-2">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-1 lg:gap-2">
         {data.map((product: IProduct) => (
-          <div key={product._id} className="bg-card rounded-md shadow-md overflow-hidden">
-            <Link href={`/products/show/${product._id}`}>
-              <Image
-                src={product.imageUrl}
-                alt={product.name}
-                width={400}
-                height={400}
-                // fill
-                // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="w-full h-36 sm:h-72 lg:h-56 object-cover object-center"
-                priority
-              />
-            </Link>
-            <div className="p-3 space-y-2">
-              <Link href={`/products/show/${product._id}`} className="hover:underline">
-                <h3 className="h3">{product.name}</h3>
-              </Link>
-              <p className="text-2xl font-bold">Rp{product.price}</p>
-              <div className="flex flex-wrap items-center gap-1">
-                <div className="badge">{product?.category?.name || "category"}</div>
-                <div>•</div>
-                <div className="flex gap-1">
-                  {product.tags.map((tag) => (
-                    <div key={tag._id} className="badge">
-                      {tag.name}
-                    </div>
-                  ))}
-                </div>
+          <CardProduct key={product._id} product={product}>
+            <ProtectedRoles roles={["admin", "editor"]}>
+              <div className="flex gap-2">
+                <Link href={`/products/edit/${product._id}`} className="text-green-500">
+                  Edit
+                </Link>
+                <DelProduct product={product} getProducts={getProducts} />
               </div>
-              {/* <p className="text-sm text-muted-foreground">{product.description}</p> */}
-
-              <ProtectedRoles roles={["admin", "editor"]}>
-                <div className="flex gap-2">
-                  <Link href={`/products/edit/${product._id}`} className="text-green-500">
-                    Edit
-                  </Link>
-                  <DelProduct product={product} getProducts={getProducts} />
-                </div>
-              </ProtectedRoles>
-            </div>
-          </div>
+            </ProtectedRoles>
+          </CardProduct>
         ))}
       </div>
     );
@@ -104,7 +73,7 @@ export default function Products() {
           </Link>
         </ProtectedRoles>
       </div>
-      <div className="container py-4">{pendingData ? <Pending /> : content}</div>
+      <div className="container pb-4">{pendingData ? <Pending /> : content}</div>
     </section>
   );
 }

@@ -1,4 +1,5 @@
 {
+    "contact": {"label": "083192375769", "url": "https://wa.me/6283192375769"},
     "main_menu": [
         {"label": "Home", "url": "/"},
         {"label": "Products", "url": "/products"},
@@ -26,5 +27,14 @@
     "profile_menu": [
         {"label": "User Profile", "url": "/profile"},
         {"label": "User Address", "url": "/profile/address"}
+    ],
+    "footer_menu_links": [
+        {"label": "Products", "url": "/products"},
+        {"label": "Posts", "url": "/posts"},
+        {"label": "Login", "url": "/login"}
+    ],
+    "footer_menu_other_links": [
+        {"label": "Nurul Iman", "url": "https://nuruliman-sindangkerta.sch.id"},
+        {"label": "Panoramaalam", "url": "https://panoramaalam.id"}
     ]
 }

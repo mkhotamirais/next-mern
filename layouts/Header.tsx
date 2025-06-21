@@ -14,12 +14,14 @@ export default function Header() {
           <NavMobile />
           <Logo />
         </div>
-        <div className="flex items-center gap-2 md:gap-3">
+        <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
           <NavDesktop />
           <Search />
           <NavCart />
           <NavUser />
-          <ThemeToggle />
+          <div className="hidden md:flex">
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </header>

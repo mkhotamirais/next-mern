@@ -40,43 +40,37 @@ export default function NavUser() {
   };
 
   if (!isMounted) return null;
+  if (!user) return null;
+
   return (
-    <div>
-      {user ? (
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon">
-              <User />
-            </Button>
-          </SheetTrigger>
-          <SheetContent className="w-64">
-            <SheetHeader>
-              <SheetTitle>Hi, {user.name}</SheetTitle>
-              <SheetDescription className="hidden"></SheetDescription>
-            </SheetHeader>
-            <nav className="flex flex-col px-3 gap-1">
-              {menu.map((item, i) => (
-                <SheetClose key={i} asChild>
-                  <Link href={item.url}>
-                    <Button variant="outline" className="w-full justify-start">
-                      {item.label}
-                    </Button>
-                  </Link>
-                </SheetClose>
-              ))}
-              <SheetClose asChild>
-                <Button type="button" variant="outline" onClick={logout} className="w-full justify-start">
-                  Logout
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="outline" size="icon">
+          <User />
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="w-64">
+        <SheetHeader>
+          <SheetTitle>Hi, {user.name}</SheetTitle>
+          <SheetDescription className="hidden"></SheetDescription>
+        </SheetHeader>
+        <nav className="flex flex-col px-3 gap-1">
+          {menu.map((item, i) => (
+            <SheetClose key={i} asChild>
+              <Link href={item.url}>
+                <Button variant="outline" className="w-full justify-start">
+                  {item.label}
                 </Button>
-              </SheetClose>
-            </nav>
-          </SheetContent>
-        </Sheet>
-      ) : (
-        <Link href="/login">
-          <Button>Login</Button>
-        </Link>
-      )}
-    </div>
+              </Link>
+            </SheetClose>
+          ))}
+          <SheetClose asChild>
+            <Button type="button" variant="outline" onClick={logout} className="w-full justify-start">
+              Logout
+            </Button>
+          </SheetClose>
+        </nav>
+      </SheetContent>
+    </Sheet>
   );
 }

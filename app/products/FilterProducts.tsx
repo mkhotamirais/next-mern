@@ -40,12 +40,12 @@ export default function FilterProducts() {
 
   return (
     <div>
-      <div className="flex mb-3">
-        <div className="flex gap-2">
+      <div className="flex mb-3 max-w-sm">
+        <div className="flex gap-2 w-full">
           <Button size={"icon"} variant={"outline"} onClick={() => setOpen(!open)}>
             <Filter />
           </Button>
-          <form onSubmit={onSearch} className="flex items-center relative">
+          <form onSubmit={onSearch} className="flex items-center relative grow">
             <div className="text-muted-foreground absolute left-0 h-full flex items-center pl-2">
               <Search size={18} />
             </div>
