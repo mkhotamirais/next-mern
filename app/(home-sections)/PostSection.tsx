@@ -14,7 +14,6 @@ export default function PostSection() {
     try {
       setPendingData(true);
       const res = await axiosInstance.get("/public/post?limit=4");
-      console.log(res);
       setData(res.data);
     } catch (error) {
       errMsg(error);
