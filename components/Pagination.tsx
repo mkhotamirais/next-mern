@@ -32,6 +32,7 @@ export default function Pagination({ totalData, perPage = 4 }: IPagination) {
     // params.set("productlimit", perPage.toString());
     // Jangan set productskip di frontend
     router.push(`?${params.toString()}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
