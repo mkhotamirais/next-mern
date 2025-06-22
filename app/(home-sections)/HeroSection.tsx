@@ -52,7 +52,7 @@ export default function HeroSection() {
             </a>
           </div>
         </div>
-        <div className="max-h-56 overflow-y-scroll">
+        <div className="max-h-56 overflow-y-scroll w-full">
           <div className="grid grid-cols-3 gap-1 py-2">
             {services.map((service) => (
               <div

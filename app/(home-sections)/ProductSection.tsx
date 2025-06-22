@@ -34,10 +34,17 @@ export default function ProductSection() {
   return (
     <section className="py-12">
       <div className="container">
-        <h2 className="h2 mb-4">Products</h2>
-        <div className="flex py-1 overflow-scroll gap-2 [&::-webkit-scrollbar]:hidden">
+        <div className="mb-4 flex justify-between items-center">
+          <h2 className="h2">Products</h2>
+          <Link href="/products">
+            <Button variant={"outline"} size={"sm"}>
+              See All
+            </Button>
+          </Link>
+        </div>
+        <div className="flex py-1 overflow-scroll gap-1 sm:gap-2 [&::-webkit-scrollbar]:hidden">
           {data.map((product: IProduct) => (
-            <CardProduct key={product._id} product={product} className="min-w-48" />
+            <CardProduct key={product._id} product={product} className="min-w-30 md:min-w-48" />
           ))}
           <Link href="/products" className="self-center">
             <Button className="rounded-full mx-4" variant={"outline"} size={"icon"}>

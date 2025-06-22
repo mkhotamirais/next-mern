@@ -20,16 +20,16 @@ export default function CardProduct({ product, children, className }: IProductCa
           height={400}
           // fill
           // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="w-full h-36 lg:h-48 object-cover object-center"
+          className="w-full h-30 sm:h-36 lg:h-48 object-cover object-center"
           priority
         />
       </Link>
-      <div className="p-3 space-y-2">
+      <div className="p-2 sm:p-3 space-y-2">
         <Link href={`/products/show/${product._id}`} className="hover:underline">
-          <h3 className="h3">{product.name}</h3>
+          <h3 className="text-sm leading-tight font-light">{product.name}</h3>
         </Link>
-        <p className="text-lg font-semibold">Rp{product.price}</p>
-        <div className="flex flex-wrap items-center gap-1">
+        <p className="font-medium">Rp{product.price}</p>
+        <div className="flex flex-wrap items-center gap-0.5 sm:gap-1">
           <div className="badge">{product?.category?.name || "category"}</div>
           <div>•</div>
           <div className="flex gap-1">
