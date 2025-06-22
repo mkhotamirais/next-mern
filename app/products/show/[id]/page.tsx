@@ -8,30 +8,37 @@ import { useParams } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import AddToCart from "./AddToCart";
 import ProtectedRoles from "@/layouts/ProtectedRoles";
+import Link from "next/link";
+import DelProduct from "../../DelProduct";
+import { useProductctStore } from "@/lib/productStore";
+// import Link from "next/link";
+// import DelProduct from "../../DelProduct";
 
 export default function ShowProduct() {
-  const [data, setData] = useState<IProduct | null>(null);
-  const [pendingData, setPendingData] = useState(false);
+  const [product, setProduct] = useState<IProduct | null>(null);
+  const [pendingProduct, setPendingProduct] = useState(false);
+  const { getData } = useProductctStore();
   const params = useParams();
   const { id } = params;
 
-  const getData = useCallback(async () => {
+  const getProduct = useCallback(async () => {
     try {
-      setPendingData(true);
+      setPendingProduct(true);
       const res = await axiosInstance.get(`/public/product/${id}`);
-      setData(res.data);
+      setProduct(res.data);
     } catch (error) {
       errMsg(error);
     } finally {
-      setPendingData(false);
+      setPendingProduct(false);
     }
   }, [id]);
 
   useEffect(() => {
-    getData();
-  }, [getData]);
+    getProduct();
+  }, [getProduct]);
 
-  if (pendingData) return <Pending />;
+  if (pendingProduct) return <Pending />;
+  if (!product) return <h1>Product not found</h1>;
 
   return (
     <section className="bg-secondary min-h-y py-8">
@@ -39,30 +46,38 @@ export default function ShowProduct() {
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="w-full sm:w-1/2">
             <Image
-              src={data?.imageUrl || "/logo-mkhotami.png"}
-              alt={data?.name || "product"}
+              src={product?.imageUrl || "/logo-mkhotami.png"}
+              alt={product?.name || "product"}
               width={800}
               height={800}
               className="object-cover object-center rounded-md"
             />
           </div>
           <div className="w-full sm:w-1/2 bg-card p-6 rounded-md shadow-md space-y-4">
-            <h1 className="h1">{data?.name}</h1>
-            <p className="text-2xl font-bold">Rp{data?.price}</p>
+            <h1 className="h1">{product?.name}</h1>
+            <p className="text-2xl font-bold">Rp{product?.price}</p>
             <div className="flex flex-wrap items-center gap-1">
-              <div className="badge">{data?.category?.name || "category"}</div>
+              <div className="badge">{product?.category?.name || "category"}</div>
               <div>•</div>
               <div className="flex gap-1">
-                {data?.tags.map((tag) => (
+                {product?.tags.map((tag) => (
                   <div key={tag._id} className="badge">
                     {tag.name}
                   </div>
                 ))}
               </div>
             </div>
-            <p className="text-sm text-muted-foreground">{data?.description}</p>
+            <p className="text-sm text-muted-foreground">{product?.description}</p>
             <ProtectedRoles roles={["user"]}>
-              <AddToCart productId={data?._id || ""} />
+              <AddToCart productId={product?._id || ""} />
+            </ProtectedRoles>
+            <ProtectedRoles roles={["admin", "editor"]}>
+              <div className="flex gap-2">
+                <Link href={`/products/edit/${product._id}`} className="text-green-500">
+                  Edit
+                </Link>
+                <DelProduct product={product} getData={getData} />
+              </div>
             </ProtectedRoles>
           </div>
         </div>

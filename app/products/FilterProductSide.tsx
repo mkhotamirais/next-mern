@@ -1,15 +1,20 @@
 "use client";
 
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useProductctStore } from "@/lib/productStore";
 import { axiosInstance, errMsg } from "@/lib/utils";
 import { IProductcat } from "@/lib/types";
 import { Button } from "@/components/ui/button";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function FilterProductSide() {
-  const { open, setOpen, params, setParams, categories, setCategories, tags, setTags, selectedTags, setSelectedTags } =
-    useProductctStore();
+  const { open, setOpen, categories, setCategories, tags, setTags } = useProductctStore();
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const urlParams = new URLSearchParams(searchParams.toString());
+  const params = useMemo(() => Object.fromEntries(searchParams), [searchParams]);
 
   const getCategories = useCallback(async () => {
     try {
@@ -34,21 +39,34 @@ export default function FilterProductSide() {
     getTags();
   }, [getCategories, getTags]);
 
-  const onCategory = (cat: IProductcat) => {
-    setParams({ ...params, category: cat._id });
+  const onProductCategory = (cat: IProductcat) => {
+    urlParams.set("productcategory", cat._id);
+    router.push(`?${urlParams.toString()}`);
   };
 
-  const onTag = (tag: IProductcat) => {
-    const isSelected = selectedTags?.includes(tag._id);
-    const updatedTags = isSelected ? selectedTags?.filter((id) => id !== tag._id) : [...selectedTags, tag._id];
-
-    setSelectedTags(updatedTags);
-    setParams({ ...params, tags: updatedTags.length ? updatedTags.join(",") : undefined });
+  const onRemoveProductCategory = () => {
+    urlParams.delete("productcategory");
+    router.push(`?${urlParams.toString()}`);
   };
 
-  const onResetTags = () => {
-    setSelectedTags([]);
-    setParams({ ...params, tags: undefined });
+  const onProductTags = (tag: IProductcat) => {
+    const currentTags = urlParams.get("producttags")?.split(",") ?? [];
+
+    const isSelected = currentTags.includes(tag._id);
+    const updatedTags = isSelected ? currentTags.filter((id) => id !== tag._id) : [...currentTags, tag._id];
+
+    if (updatedTags.length > 0) {
+      urlParams.set("producttags", updatedTags.join(","));
+    } else {
+      urlParams.delete("producttags");
+    }
+
+    router.push(`?${urlParams.toString()}`);
+  };
+
+  const onResetProductTags = () => {
+    urlParams.delete("producttags");
+    router.push(`?${urlParams.toString()}`);
   };
 
   return (
@@ -62,16 +80,16 @@ export default function FilterProductSide() {
           <div className="mb-4">
             <h3 className="h3 mb-2">Category</h3>
             <div className="flex flex-wrap gap-1">
-              <Button variant={"outline"} size={"sm"} onClick={() => setParams({ ...params, category: "" })}>
+              <Button variant={"outline"} size={"sm"} onClick={onRemoveProductCategory}>
                 Reset
               </Button>
               {categories?.map((cat: IProductcat) => (
                 <Button
-                  variant={params?.category === cat._id ? "default" : "outline"}
+                  variant={params?.productcategory === cat._id ? "default" : "outline"}
                   size={"sm"}
                   key={cat._id}
                   className="btn btn-outline btn-xs"
-                  onClick={() => onCategory(cat)}
+                  onClick={() => onProductCategory(cat)}
                 >
                   {cat.name}
                 </Button>
@@ -81,16 +99,16 @@ export default function FilterProductSide() {
           <div className="mb-4">
             <h3 className="h3 mb-2">Tags</h3>
             <div className="flex flex-wrap gap-1">
-              <Button variant={"outline"} size={"sm"} onClick={onResetTags}>
+              <Button variant={"outline"} size={"sm"} onClick={onResetProductTags}>
                 Reset
               </Button>
               {tags?.map((tag: IProductcat) => (
                 <Button
-                  variant={params?.tags?.includes(tag._id) ? "default" : "outline"}
+                  variant={params?.producttags?.includes(tag._id) ? "default" : "outline"}
                   size={"sm"}
                   key={tag._id}
                   className="btn btn-outline btn-xs"
-                  onClick={() => onTag(tag)}
+                  onClick={() => onProductTags(tag)}
                 >
                   {tag.name}
                 </Button>

@@ -9,26 +9,30 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { IProduct } from "@/lib/types";
+import { IProduct, IProductQuery } from "@/lib/types";
 import { axiosInstance } from "@/lib/utils";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
 interface Props {
   product: IProduct;
-  getProducts: () => void;
+  getProducts: (params?: IProductQuery) => void;
 }
 
 export default function DelProduct({ product, getProducts }: Props) {
   const [pending, setPending] = useState(false);
+  const router = useRouter();
+
   const onDelete = async () => {
     try {
       setPending(true);
       const res = await axiosInstance.delete(`/editor/product/${product._id}`);
       getProducts();
       toast.success(res?.data?.message);
+      router.replace("/products");
     } catch (error) {
       if (error instanceof AxiosError) {
         console.log(error);

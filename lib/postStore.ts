@@ -1,12 +1,25 @@
 import { create } from "zustand";
-import { IParams } from "./types";
+import { IPost, IPostQuery } from "./types";
+import { axiosInstance, errMsg } from "./utils";
 
 interface IPostStore {
-  params: IParams;
-  setParams: (params: IParams) => void;
+  posts: IPost[] | null;
+  pendingPosts: boolean;
+  getPosts: (params?: IPostQuery) => Promise<void>;
 }
 
 export const usePostStore = create<IPostStore>((set) => ({
-  params: {},
-  setParams: (params) => set({ params }),
+  posts: null,
+  pendingPosts: false,
+  getPosts: async (params) => {
+    try {
+      set({ pendingPosts: true });
+      const res = await axiosInstance.get("/public/post", { params });
+      set({ posts: res.data.posts });
+    } catch (error) {
+      errMsg(error);
+    } finally {
+      set({ pendingPosts: false });
+    }
+  },
 }));

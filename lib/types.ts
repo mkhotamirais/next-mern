@@ -65,10 +65,14 @@ export interface IPost {
 
 export type TRoles = "user" | "editor" | "admin";
 
-export interface IParams {
-  q?: string;
-  category?: string;
-  tags?: string;
+export interface IProductQuery {
+  productq?: string;
+  productcategory?: string;
+  producttags?: string;
+}
+
+export interface IPostQuery {
+  postq?: string;
 }
 
 export interface ICart {

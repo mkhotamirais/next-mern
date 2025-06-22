@@ -1,9 +1,14 @@
 import { create } from "zustand";
-import { IParams, IProductcat, IProducttag } from "./types";
+import { IProduct, IProductcat, IProductQuery, IProducttag } from "./types";
+import { axiosInstance, errMsg } from "./utils";
 
 interface ProductStoreType {
-  params: IParams | null;
-  setParams: (params: IParams | null) => void;
+  products: IProduct[] | null;
+  total: number;
+  pendingProducts: boolean;
+  getProducts: (params?: IProductQuery) => Promise<void>;
+  search: string;
+  setSearch: (search: string) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
   categories: IProductcat[] | null;
@@ -15,8 +20,22 @@ interface ProductStoreType {
 }
 
 export const useProductctStore = create<ProductStoreType>((set) => ({
-  params: null,
-  setParams: (params) => set({ params }),
+  products: [],
+  total: 0,
+  pendingProducts: false,
+  getProducts: async (params) => {
+    try {
+      set({ pendingProducts: true });
+      const res = await axiosInstance.get("/public/product", { params });
+      set({ products: res.data.products, total: res.data.total });
+    } catch (error) {
+      errMsg(error);
+    } finally {
+      set({ pendingProducts: false });
+    }
+  },
+  search: "",
+  setSearch: (search) => set({ search }),
   open: false,
   setOpen: (open) => set({ open }),
   categories: null,

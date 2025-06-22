@@ -5,18 +5,18 @@ import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
 
-export function FilterPosts() {
+export function SearchPosts() {
   const router = useRouter();
   const searchParam = useSearchParams();
 
   const onSearch = useDebouncedCallback((e) => {
-    const params = new URLSearchParams(searchParam.toString());
+    const urlParams = new URLSearchParams(searchParam.toString());
     if (e) {
-      params.set("q", e);
+      urlParams.set("postq", e);
     } else {
-      params.delete("q");
+      urlParams.delete("postq");
     }
-    router.push(`?${params.toString()}`);
+    router.push(`?${urlParams.toString()}`);
   }, 300);
 
   return (

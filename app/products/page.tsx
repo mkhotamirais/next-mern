@@ -2,46 +2,34 @@
 
 import { Button } from "@/components/ui/button";
 import { IProduct } from "@/lib/types";
-import { axiosInstance, errMsg } from "@/lib/utils";
 import Link from "next/link";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import DelProduct from "./DelProduct";
 import Pending from "@/components/Pending";
 import ProtectedRoles from "@/layouts/ProtectedRoles";
-import FilterProducts from "./FilterProducts";
 import FilterProductSide from "./FilterProductSide";
 import { useProductctStore } from "@/lib/productStore";
 import CardProduct from "@/components/CardProduct";
+import { useSearchParams } from "next/navigation";
+import FilterProductsSearch from "./FilterProductsSearch";
+import FilterProductsKeys from "./FilterProductsKeys";
 
 export default function Products() {
-  const [data, setData] = useState([]);
-  const [pendingData, setPendingData] = useState(false);
-  const { params } = useProductctStore();
+  const { products, getProducts, pendingProducts } = useProductctStore();
 
-  const getProducts = useCallback(async () => {
-    try {
-      setPendingData(true);
-      const res = await axiosInstance.get("/public/product", {
-        params,
-      });
-      setData(res.data);
-    } catch (error) {
-      errMsg(error);
-    } finally {
-      setPendingData(false);
-    }
-  }, [params]);
+  const searchParams = useSearchParams();
+  const params = useMemo(() => Object.fromEntries(searchParams), [searchParams]);
 
   useEffect(() => {
-    getProducts();
-  }, [getProducts]);
+    getProducts(params);
+  }, [getProducts, params]);
 
   let content;
-  if (data.length === 0) content = <h1>No products found</h1>;
-  if (data.length > 0) {
+  if (products?.length === 0) content = <h1>No products found</h1>;
+  if (products && products.length > 0) {
     content = (
       <div className="grid grid-cols-2 md:grid-cols-5 gap-1 lg:gap-2">
-        {data.map((product: IProduct) => (
+        {products.map((product: IProduct) => (
           <CardProduct key={product._id} product={product}>
             <ProtectedRoles roles={["admin", "editor"]}>
               <div className="flex gap-2">
@@ -62,7 +50,8 @@ export default function Products() {
       <div className="py-8 bg-zinc-200 dark:bg-zinc-900">
         <div className="container">
           <h1 className="h1 mb-2">Products</h1>
-          <FilterProducts />
+          <FilterProductsSearch />
+          <FilterProductsKeys />
         </div>
       </div>
       <FilterProductSide />
@@ -73,7 +62,7 @@ export default function Products() {
           </Link>
         </ProtectedRoles>
       </div>
-      <div className="container pb-4">{pendingData ? <Pending /> : content}</div>
+      <div className="container pb-4">{pendingProducts ? <Pending /> : content}</div>
     </section>
   );
 }
