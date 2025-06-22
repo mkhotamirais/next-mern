@@ -57,7 +57,8 @@ export default function FilterProductsKeys() {
 
   return (
     <div>
-      {Object.keys(params).length ? (
+      {/* {Object.keys(params).length ? ( */}
+      {productq || paramCategoryName || paramTagNames ? (
         <div className="flex items-center gap-1">
           <span className="text-sm">Result for :</span>
           {productq && (

@@ -140,7 +140,7 @@ export default function Search() {
                                   className={`${resultLink} flex items-center gap-1`}
                                 >
                                   <Image
-                                    src={item.imageUrl}
+                                    src={item?.imageUrl || "/logo-warungota.png"}
                                     alt={item.title}
                                     width={20}
                                     height={20}

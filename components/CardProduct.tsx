@@ -14,7 +14,7 @@ export default function CardProduct({ product, children, className }: IProductCa
     <div key={product._id} className={`${className} bg-card rounded-md shadow-md overflow-hidden`}>
       <Link href={`/products/show/${product._id}`}>
         <Image
-          src={product.imageUrl}
+          src={product.imageUrl || "/logo-warungota.png"}
           alt={product.name}
           width={400}
           height={400}

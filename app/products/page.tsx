@@ -13,14 +13,19 @@ import CardProduct from "@/components/CardProduct";
 import { useSearchParams } from "next/navigation";
 import FilterProductsSearch from "./FilterProductsSearch";
 import FilterProductsKeys from "./FilterProductsKeys";
+import Pagination from "@/components/Pagination";
 
 export default function Products() {
-  const { products, getProducts, pendingProducts } = useProductctStore();
+  const { products, getProducts, pendingProducts, total } = useProductctStore();
 
   const searchParams = useSearchParams();
   const params = useMemo(() => Object.fromEntries(searchParams), [searchParams]);
+  const productLimit = 10;
 
   useEffect(() => {
+    if (!params.productlimit) {
+      params.productlimit = productLimit.toString();
+    }
     getProducts(params);
   }, [getProducts, params]);
 
@@ -28,20 +33,23 @@ export default function Products() {
   if (products?.length === 0) content = <h1>No products found</h1>;
   if (products && products.length > 0) {
     content = (
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-1 lg:gap-2">
-        {products.map((product: IProduct) => (
-          <CardProduct key={product._id} product={product}>
-            <ProtectedRoles roles={["admin", "editor"]}>
-              <div className="flex gap-2">
-                <Link href={`/products/edit/${product._id}`} className="text-green-500">
-                  Edit
-                </Link>
-                <DelProduct product={product} getProducts={getProducts} />
-              </div>
-            </ProtectedRoles>
-          </CardProduct>
-        ))}
-      </div>
+      <>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-1 lg:gap-2">
+          {products.map((product: IProduct) => (
+            <CardProduct key={product._id} product={product}>
+              <ProtectedRoles roles={["admin", "editor"]}>
+                <div className="flex gap-2">
+                  <Link href={`/products/edit/${product._id}`} className="text-green-500">
+                    Edit
+                  </Link>
+                  <DelProduct product={product} getProducts={getProducts} />
+                </div>
+              </ProtectedRoles>
+            </CardProduct>
+          ))}
+        </div>
+        <Pagination totalData={total} perPage={productLimit} />
+      </>
     );
   }
 
@@ -62,6 +70,7 @@ export default function Products() {
           </Link>
         </ProtectedRoles>
       </div>
+
       <div className="container pb-4">{pendingProducts ? <Pending /> : content}</div>
     </section>
   );

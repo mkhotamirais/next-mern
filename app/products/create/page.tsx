@@ -46,7 +46,8 @@ export default function CreateProduct() {
   const getTags = async () => {
     try {
       const res = await axiosInstance.get("/public/producttag");
-      setTags(res.data);
+      const result = res.data?.sort((a: IProducttag, b: IProducttag) => a.name.localeCompare(b.name));
+      setTags(result);
     } catch (error) {
       if (error instanceof AxiosError) {
         if (process.env.NODE_ENV === "development") console.log(error);
@@ -57,7 +58,8 @@ export default function CreateProduct() {
   const getCategories = async () => {
     try {
       const res = await axiosInstance.get("/public/productcat");
-      setCategories(res.data);
+      const result = res.data?.sort((a: IProductcat, b: IProductcat) => a.name.localeCompare(b.name));
+      setCategories(result);
     } catch (error) {
       if (error instanceof AxiosError) {
         if (process.env.NODE_ENV === "development") console.log(error);
@@ -149,6 +151,7 @@ export default function CreateProduct() {
                 <FormSelect
                   label="Category"
                   options={categoryOptions || []}
+                  placeholder="Select category"
                   value={category}
                   onChange={setCategory}
                   error={errors?.category}

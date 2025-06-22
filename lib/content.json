@@ -11,16 +11,20 @@
     ],
     "editor_menu": [
         {"label": "Dashboard", "url": "/dashboard"},
+        {"label": "Products", "url": "/products"},
         {"label": "Product Category", "url": "/product-category"},
         {"label": "Product Tag", "url": "/product-tag"},
+        {"label": "Posts", "url": "/posts"},
         {"label": "Post Category", "url": "/post-category"},
         {"label": "Profile", "url": "/profile"}
     ],
     "admin_menu": [
         {"label": "Dashboard", "url": "/dashboard"},
         {"label": "Users", "url": "/users"},
+        {"label": "Products", "url": "/products"},
         {"label": "Product Category", "url": "/product-category"},
         {"label": "Product Tag", "url": "/product-tag"},
+        {"label": "Posts", "url": "/posts"},
         {"label": "Post Category", "url": "/post-category"},
         {"label": "Profile", "url": "/profile"}
     ],
