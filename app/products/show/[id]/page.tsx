@@ -11,13 +11,11 @@ import ProtectedRoles from "@/layouts/ProtectedRoles";
 import Link from "next/link";
 import DelProduct from "../../DelProduct";
 import { useProductctStore } from "@/lib/productStore";
-// import Link from "next/link";
-// import DelProduct from "../../DelProduct";
 
 export default function ShowProduct() {
   const [product, setProduct] = useState<IProduct | null>(null);
   const [pendingProduct, setPendingProduct] = useState(false);
-  const { getData } = useProductctStore();
+  const { getProducts } = useProductctStore();
   const params = useParams();
   const { id } = params;
 
@@ -76,7 +74,7 @@ export default function ShowProduct() {
                 <Link href={`/products/edit/${product._id}`} className="text-green-500">
                   Edit
                 </Link>
-                <DelProduct product={product} getData={getData} />
+                <DelProduct product={product} getProducts={getProducts} />
               </div>
             </ProtectedRoles>
           </div>
