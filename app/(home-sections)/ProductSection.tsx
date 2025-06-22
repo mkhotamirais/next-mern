@@ -17,7 +17,7 @@ export default function ProductSection() {
     try {
       setPendingData(true);
       const res = await axiosInstance.get("/public/product?limit=10");
-      setData(res.data);
+      setData(res.data.products);
     } catch (error) {
       errMsg(error);
     } finally {
