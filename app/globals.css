@@ -152,7 +152,7 @@ button {
 }
 
 .badge {
-  @apply text-[0.60rem] sm:text-[0.65rem] py-0 sm:py-0.5 px-[4px] sm:px-1.5 rounded-sm bg-primary text-primary-foreground w-fit;
+  @apply text-[0.63rem] sm:text-[0.65rem] py-[1px] sm:py-0.5 px-[5px] sm:px-1.5 rounded-sm bg-primary text-primary-foreground w-fit;
 }
 
 .tiptap {
