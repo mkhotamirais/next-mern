@@ -115,12 +115,14 @@ export default function ProductCategory() {
             ) : (
               <>
                 <h3 className="px-2 py-1">{productCategory.name}</h3>
-                <div className="flex gap-1">
-                  <button type="button" onClick={() => onEditMode(productCategory)} className="btn-edit">
-                    Edit
-                  </button>
-                  <DelProductcat productCategory={productCategory} getProductCategories={getProductCategories} />
-                </div>
+                {productCategory.name !== "lainnya" ? (
+                  <div className="flex gap-1">
+                    <button type="button" onClick={() => onEditMode(productCategory)} className="btn-edit">
+                      Edit
+                    </button>
+                    <DelProductcat productCategory={productCategory} getProductCategories={getProductCategories} />
+                  </div>
+                ) : null}
               </>
             )}
           </div>

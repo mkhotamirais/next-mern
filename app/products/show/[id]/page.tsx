@@ -44,11 +44,11 @@ export default function ShowProduct() {
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="w-full sm:w-1/2">
             <Image
-              src={product?.imageUrl || "/logo-mkhotami.png"}
+              src={product?.imageUrl || "/logo-warungota.png"}
               alt={product?.name || "product"}
               width={800}
               height={800}
-              className="object-cover object-center rounded-md"
+              className={`${product?.imageUrl ? "" : "dark:invert"} object-cover object-center rounded-md`}
             />
           </div>
           <div className="w-full sm:w-1/2 bg-card p-6 rounded-md shadow-md space-y-4">
@@ -65,7 +65,7 @@ export default function ShowProduct() {
                 ))}
               </div>
             </div>
-            <p className="text-sm text-muted-foreground">{product?.description}</p>
+            <article className="tiptap" dangerouslySetInnerHTML={{ __html: product?.description || "" }}></article>
             <ProtectedRoles roles={["user"]}>
               <AddToCart productId={product?._id || ""} />
             </ProtectedRoles>

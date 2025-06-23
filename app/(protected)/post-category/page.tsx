@@ -9,6 +9,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import DelPostcat from "./DelPostcat";
 import ProtectedRouteRoles from "@/layouts/ProtectedRouteRoles";
+import Pending from "@/components/Pending";
 
 export default function PostCategory() {
   const [name, setName] = useState("");
@@ -88,7 +89,7 @@ export default function PostCategory() {
   };
 
   let content;
-  if (pendingData) content = <p>Loading...</p>;
+  if (pendingData) content = <Pending />;
   if (postCategories?.length === 0) content = <p>No post category found</p>;
   if (postCategories) {
     content = (
@@ -115,12 +116,14 @@ export default function PostCategory() {
             ) : (
               <>
                 <h3 className="px-2 py-1">{postCategory.name}</h3>
-                <div className="flex gap-1">
-                  <button type="button" onClick={() => onEditMode(postCategory)} className="btn-edit">
-                    Edit
-                  </button>
-                  <DelPostcat postCategory={postCategory} getPostCategories={getPostCategories} />
-                </div>
+                {postCategory.name !== "lainnya" ? (
+                  <div className="flex gap-1">
+                    <button type="button" onClick={() => onEditMode(postCategory)} className="btn-edit">
+                      Edit
+                    </button>
+                    <DelPostcat postCategory={postCategory} getPostCategories={getPostCategories} />
+                  </div>
+                ) : null}
               </>
             )}
           </div>

@@ -26,7 +26,7 @@ export default function Posts() {
   if (posts?.length === 0) content = <h1>No posts found</h1>;
   if (posts && posts.length > 0) {
     content = (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
         {posts.map((post: IPost) => (
           <CardPost key={post._id} post={post}>
             <ProtectedRoles roles={["admin", "editor"]}>
@@ -60,7 +60,7 @@ export default function Posts() {
           </Link>
         </ProtectedRoles>
       </div>
-      <div className="container py-4">{pendingPosts ? <Pending /> : content}</div>
+      <div className="container pb-4">{pendingPosts ? <Pending /> : content}</div>
     </section>
   );
 }

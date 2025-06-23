@@ -112,11 +112,11 @@ export default function Search() {
                                 >
                                   <div className="flex gap-1 items-center">
                                     <Image
-                                      src={item.imageUrl}
+                                      src={item?.imageUrl || "/logo-warungota.png"}
                                       alt={item.name}
                                       width={20}
                                       height={20}
-                                      className="rounded-xs size-6"
+                                      className={`${item?.imageUrl ? "" : "dark:invert"} rounded-xs size-6`}
                                     />
                                     <h4>{item.name}</h4>
                                   </div>
@@ -144,7 +144,7 @@ export default function Search() {
                                     alt={item.title}
                                     width={20}
                                     height={20}
-                                    className="rounded-xs size-6"
+                                    className={`${item?.imageUrl ? "" : "dark:invert"} rounded-xs size-6`}
                                   />
                                   <span>{item.title}</span>
                                 </Link>

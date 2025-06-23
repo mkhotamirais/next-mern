@@ -16,7 +16,7 @@ export default function ProductSection() {
   const getData = async () => {
     try {
       setPendingData(true);
-      const res = await axiosInstance.get("/public/product?limit=10");
+      const res = await axiosInstance.get("/public/product?productlimit=10&productsort=-imageUrl");
       setData(res.data.products);
     } catch (error) {
       errMsg(error);

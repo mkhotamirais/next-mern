@@ -2,9 +2,9 @@
 
 import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
-import FormTextarea from "@/components/FormTextarea";
 import FormUpload from "@/components/FormUpload";
 import Pending from "@/components/Pending";
+import Tiptap from "@/components/tiptap/Tiptap";
 import { Button } from "@/components/ui/button";
 import ProtectedRoles from "@/layouts/ProtectedRoles";
 import { IProductcat } from "@/lib/types";
@@ -114,14 +114,16 @@ export default function EditPost() {
         handleChange={(e) => setTitle(e.target.value)}
         error={errors?.title}
       />
-      <FormTextarea
+      <Tiptap label="Content" value={content} onChange={setContent} error={errors?.content} />
+
+      {/* <FormTextarea
         id="content"
         label="Content"
         value={content}
         placeholder="Enter post content"
         handleChange={(e) => setContent(e.target.value)}
         error={errors?.content}
-      />
+      /> */}
       {categoryOptions && (
         <FormSelect
           label="Category"
@@ -166,7 +168,7 @@ export default function EditPost() {
     <ProtectedRoles roles={["admin", "editor"]}>
       <section className="min-h-y py-4 bg-secondary">
         <div className="container">
-          <div className="bg-card p-6 rounded-md max-w-2xl">
+          <div className="bg-card p-3 md:p-6 rounded-md max-w-2xl">
             <h1 className="h1 mb-4">Update Posts</h1>
             <div>{pendingData ? <Pending /> : formContent}</div>
           </div>

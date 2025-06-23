@@ -9,12 +9,12 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import FormSelect from "@/components/FormSelect";
 import { IProductcat, IProducttag } from "@/lib/types";
 import FormMultiSelect from "@/components/FormMultiSelect";
-import FormTextarea from "@/components/FormTextarea";
 import Pending from "@/components/Pending";
 import ProtectedRouteRoles from "@/layouts/ProtectedRouteRoles";
 import { toast } from "sonner";
 import FormUpload from "@/components/FormUpload";
 import Image from "next/image";
+import Tiptap from "@/components/tiptap/Tiptap";
 
 export default function EditProduct() {
   const [name, setName] = useState("");
@@ -161,14 +161,16 @@ export default function EditProduct() {
                 }}
                 error={errors?.price}
               />
-              <FormTextarea
+              <Tiptap label="Content" value={description} onChange={setDescription} error={errors?.description} />
+
+              {/* <FormTextarea
                 id="description"
                 label="Description"
                 placeholder="description"
                 value={description}
                 handleChange={(e) => setDescription(e.target.value)}
                 error={errors?.description}
-              />
+              /> */}
               {categoryOptions && (
                 <FormSelect
                   label="Category"

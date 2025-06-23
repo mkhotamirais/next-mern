@@ -16,23 +16,23 @@ export default function CardPost({ post, children, showDesc = true }: ICardPost)
     <div key={post._id} className="bg-card rounded-md overflow-hidden cursor-pointer">
       <Link href={`/posts/show/${post._id}`}>
         <Image
-          src={post.imageUrl}
+          src={post?.imageUrl || "/logo-warungota.png"}
           alt={post.title}
           width={400}
           height={400}
-          className="w-full h-56 object-cover object-center"
+          className={`w-full h-56 object-cover object-center ${post?.imageUrl ? "" : "dark:invert"}`}
           priority
         />
       </Link>
 
       <div className="p-4 space-y-2">
         <Link href={`/posts/show/${post._id}`} className="hover:underline">
-          <h3 className="h3">{smartTrim(post.title, 60)}</h3>
+          <h3 className="first-letter:uppercase h3">{smartTrim(post.title, 60)}</h3>
         </Link>
         <p className="text-xs text-muted-foreground">{moment(post.createdAt).fromNow()}</p>
         <div className="badge">{post?.category?.name || "category"}</div>
         {showDesc && (
-          <p className="text-sm text-muted-foreground first-letter:uppercase">{smartTrim(post.content, 120)}</p>
+          <article className="tiptap" dangerouslySetInnerHTML={{ __html: smartTrim(post.content, 120) }}></article>
         )}
         {children}
       </div>

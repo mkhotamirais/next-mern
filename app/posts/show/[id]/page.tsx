@@ -32,7 +32,7 @@ export default function ShowPost() {
     try {
       setPending(true);
       const res = await axiosInstance.get(`/public/post`);
-      const resultExceptCurrent = res.data.filter((post: IPost) => post._id !== id);
+      const resultExceptCurrent = res.data.posts.filter((post: IPost) => post._id !== id);
       setOtherData(resultExceptCurrent);
     } catch (error) {
       errMsg(error);
@@ -55,14 +55,14 @@ export default function ShowPost() {
           <div className="w-full md:w-2/3 space-y-4">
             <h1 className="h1">{data?.title}</h1>
             <Image
-              src={data?.imageUrl || "/logo-mkhotami.png"}
+              src={data?.imageUrl || "/logo-warungota.png"}
               alt={data?.title ?? "image"}
               width={600}
               height={600}
-              className="w-full rounded-md"
+              className={`w-full rounded-md ${data?.imageUrl ? "" : "dark:invert"}`}
               priority
             />
-            <p className="text-muted-foreground first-letter:capitalize leading-relaxed">{data?.content}</p>
+            <article className="tiptap" dangerouslySetInnerHTML={{ __html: data?.content || "" }}></article>
             <p>{data?.category?.name}</p>
           </div>
           <div className=" w-full md:w-1/3">

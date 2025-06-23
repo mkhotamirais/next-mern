@@ -9,10 +9,10 @@ import { FormEvent, useEffect, useState } from "react";
 import FormSelect from "@/components/FormSelect";
 import { IProductcat, IProducttag } from "@/lib/types";
 import FormMultiSelect from "@/components/FormMultiSelect";
-import FormTextarea from "@/components/FormTextarea";
 import ProtectedRouteRoles from "@/layouts/ProtectedRouteRoles";
 import { toast } from "sonner";
 import FormUpload from "@/components/FormUpload";
+import Tiptap from "@/components/tiptap/Tiptap";
 
 export default function CreateProduct() {
   const [name, setName] = useState("");
@@ -122,6 +122,7 @@ export default function CreateProduct() {
                 placeholder="Product name"
                 value={name}
                 handleChange={(e) => setName(e.target.value)}
+                autoFocus={true}
                 error={errors?.name}
               />
               <FormInput
@@ -139,14 +140,16 @@ export default function CreateProduct() {
                 }}
                 error={errors?.price}
               />
-              <FormTextarea
+              <Tiptap label="Content" value={description} onChange={setDescription} error={errors?.description} />
+
+              {/* <FormTextarea
                 id="description"
                 label="Description"
                 placeholder="description"
                 value={description}
                 handleChange={(e) => setDescription(e.target.value)}
                 error={errors?.description}
-              />
+              /> */}
               {categoryOptions && (
                 <FormSelect
                   label="Category"
