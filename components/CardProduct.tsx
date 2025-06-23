@@ -1,5 +1,5 @@
 import { IProduct } from "@/lib/types";
-import { formatRupiah } from "@/lib/utils";
+import { formatRupiah, smartTrim } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -27,7 +27,7 @@ export default function CardProduct({ product, children, className }: IProductCa
       </Link>
       <div className="p-2 sm:p-3 space-y-2">
         <Link href={`/products/show/${product._id}`} className="hover:underline">
-          <h3 className="first-letter:uppercase text-sm leading-tight font-light">{product.name}</h3>
+          <h3 className="first-letter:uppercase text-sm leading-tight font-light">{smartTrim(product.name, 24)}</h3>
         </Link>
         <p className="font-medium">{formatRupiah(product.price)}</p>
         <div className="flex flex-wrap items-center gap-0.5 sm:gap-1">

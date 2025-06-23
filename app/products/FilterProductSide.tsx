@@ -83,17 +83,19 @@ export default function FilterProductSide() {
               <Button variant={"outline"} size={"sm"} onClick={onRemoveProductCategory}>
                 Reset
               </Button>
-              {categories?.map((cat: IProductcat) => (
-                <Button
-                  variant={params?.productcategory === cat._id ? "default" : "outline"}
-                  size={"sm"}
-                  key={cat._id}
-                  className="btn btn-outline btn-xs"
-                  onClick={() => onProductCategory(cat)}
-                >
-                  {cat.name}
-                </Button>
-              ))}
+              {categories
+                ?.sort((a: IProductcat, b: IProductcat) => a.name.localeCompare(b.name))
+                ?.map((cat: IProductcat) => (
+                  <Button
+                    variant={params?.productcategory === cat._id ? "default" : "outline"}
+                    size={"sm"}
+                    key={cat._id}
+                    className="btn btn-outline btn-xs"
+                    onClick={() => onProductCategory(cat)}
+                  >
+                    {cat.name}
+                  </Button>
+                ))}
             </div>
           </div>
           <div className="mb-4">
@@ -102,17 +104,19 @@ export default function FilterProductSide() {
               <Button variant={"outline"} size={"sm"} onClick={onResetProductTags}>
                 Reset
               </Button>
-              {tags?.map((tag: IProductcat) => (
-                <Button
-                  variant={params?.producttags?.includes(tag._id) ? "default" : "outline"}
-                  size={"sm"}
-                  key={tag._id}
-                  className="btn btn-outline btn-xs"
-                  onClick={() => onProductTags(tag)}
-                >
-                  {tag.name}
-                </Button>
-              ))}
+              {tags
+                ?.sort((a: IProductcat, b: IProductcat) => a.name.localeCompare(b.name))
+                ?.map((tag: IProductcat) => (
+                  <Button
+                    variant={params?.producttags?.includes(tag._id) ? "default" : "outline"}
+                    size={"sm"}
+                    key={tag._id}
+                    className="btn btn-outline btn-xs"
+                    onClick={() => onProductTags(tag)}
+                  >
+                    {tag.name}
+                  </Button>
+                ))}
             </div>
           </div>
         </div>

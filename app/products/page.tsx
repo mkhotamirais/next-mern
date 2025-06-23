@@ -20,7 +20,7 @@ export default function Products() {
 
   const searchParams = useSearchParams();
   const params = useMemo(() => Object.fromEntries(searchParams), [searchParams]);
-  const productLimit = 10;
+  const productLimit = 20;
 
   useEffect(() => {
     if (!params.productlimit) {
@@ -57,7 +57,7 @@ export default function Products() {
     <section className="min-h-y bg-secondary">
       <div className="py-8 bg-zinc-200 dark:bg-zinc-900">
         <div className="container">
-          <h1 className="h1 mb-2">Products</h1>
+          <h1 className="h1 mb-2">Products ({total})</h1>
           <FilterProductsSearch />
           <FilterProductsKeys />
         </div>
