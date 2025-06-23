@@ -25,7 +25,7 @@ export default function NavMobile() {
             <Menu />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-64">
+        <SheetContent side="right" className="w-64">
           <SheetHeader>
             <SheetTitle>
               <Logo />
@@ -33,7 +33,7 @@ export default function NavMobile() {
             <SheetDescription className="hidden"></SheetDescription>
           </SheetHeader>
           <div className="px-3">
-            <div className="flex justify-end mb-2">
+            <div className="flex justify-start mb-2">
               <ThemeToggle />
             </div>
             <nav className="flex flex-col gap-1">
