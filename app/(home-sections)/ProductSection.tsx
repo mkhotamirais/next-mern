@@ -47,7 +47,7 @@ export default function ProductSection() {
             <CardProduct key={product._id} product={product} className="min-w-30 md:min-w-48" />
           ))}
           <Link href="/products" className="self-center">
-            <Button className="rounded-full mx-4" variant={"outline"} size={"icon"}>
+            <Button className="rounded-full mx-4 w-12 h-12" variant={"outline"} size={"icon"} aria-label="all-products">
               <ChevronRight />
             </Button>
           </Link>

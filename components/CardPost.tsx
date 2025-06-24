@@ -21,7 +21,7 @@ export default function CardPost({ post, children, showDesc = true }: ICardPost)
           width={400}
           height={400}
           className={`w-full h-56 object-cover object-center ${post?.imageUrl ? "" : "dark:invert"}`}
-          priority
+          // priority
         />
       </Link>
 

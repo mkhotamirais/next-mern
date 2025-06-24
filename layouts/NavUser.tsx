@@ -45,7 +45,7 @@ export default function NavUser() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" aria-label="user-menu-trigger">
           <User />
         </Button>
       </SheetTrigger>

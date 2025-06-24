@@ -21,7 +21,7 @@ export default function NavMobile() {
     <div className="flex md:hidden">
       <Sheet>
         <SheetTrigger asChild>
-          <Button variant={"outline"} size={"icon"}>
+          <Button variant={"outline"} size={"icon"} aria-label="mobile-menu-trigger">
             <Menu />
           </Button>
         </SheetTrigger>

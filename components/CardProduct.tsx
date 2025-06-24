@@ -22,7 +22,7 @@ export default function CardProduct({ product, children, className }: IProductCa
           // fill
           // sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className={`${product?.imageUrl ? "" : "dark:invert"} w-full h-30 sm:h-36 lg:h-48 object-cover object-center`}
-          priority
+          // priority
         />
       </Link>
       <div className="p-2 sm:p-3 space-y-2">
